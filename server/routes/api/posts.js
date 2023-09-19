@@ -45,6 +45,7 @@ router.get('/', (req, res) => {
     query('SELECT * FROM inventory;', [], (results, fields) => {
         res.send(results);
     });
+    // res.send('hello!');
 });
 
 // Add Post

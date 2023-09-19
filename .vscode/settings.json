@@ -1,0 +1,9 @@
+{
+    "appService.zipIgnorePattern": [
+        // "node_modules{,/**}",
+        ".vscode{,/**}",
+        "client{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/a319b550-2d05-43fe-8d17-7da6de3eb9cb/resourceGroups/food-streams-sep/providers/Microsoft.Web/sites/floatingfarmfood",
+    "appService.deploySubpath": "."
+}
