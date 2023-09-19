@@ -1,7 +1,7 @@
 {
-  "name": "vueexpressproject",
+  "name": "floatingfarm",
   "version": "1.0.0",
-  "description": "Full stack and express app",
+  "description": "Floating Farm - Website For Supply Entries",
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
