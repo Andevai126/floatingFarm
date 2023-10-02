@@ -1,24 +1,40 @@
+// Packages
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
+
+var passport = require('passport');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var SQLiteStore = require('connect-sqlite3')(session);
 
 const app = express()
 
+// Middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    store: new SQLiteStore({ db: 'sessions.db', dir: './server/var/db' })
+}));
+app.use(passport.authenticate('session'));
+
+// API Routes
 const posts = require('./routes/api/posts');
 app.use('/api/posts', posts);
+const auth = require('./routes/auth');
+app.use('/api', auth);
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
-// if (process.env.NODE_ENV === 'production') {
-
-    // Comment these two lines when in development:
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
-    
-// }
-
+// Start server
 const port = process.env.PORT || 5000;
-
-app.listen(port, () => console.log(`Sever started on port ${port}`));
+app.listen(port, () => console.log(`Server started on port ${port}`));
