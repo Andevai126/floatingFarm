@@ -28,11 +28,12 @@ app.use(session({
 }));
 app.use(passport.authenticate('session'));
 
-// API Routes
-const posts = require('./routes/api/posts');
-app.use('/api/posts', posts);
+// Routes
 const auth = require('./routes/auth');
-app.use('/api', auth);
+app.use('/auth', auth);
+const posts = require('./routes/api/posts');
+app.use('/api', posts);
+
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
 // Start server

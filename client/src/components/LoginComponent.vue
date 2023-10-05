@@ -27,7 +27,7 @@
     methods: {
         async login() {
             try {
-                const response = await axios.post('/api/login/password', {
+                const response = await axios.post('/auth/login/password', {
                     username: this.username,
                     password: this.password
                 });

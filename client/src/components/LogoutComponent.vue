@@ -13,7 +13,7 @@
     methods: {
         async logout() {
             try {
-                const response = await axios.post('/api/logout');
+                const response = await axios.post('/auth/logout');
                 // console.log(response.data, 'probable logout success');
 
                 // Global variable
