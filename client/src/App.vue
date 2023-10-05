@@ -1,18 +1,30 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <PostComponent />
-  <LoginComponent />
+  <div v-if="!loggedIn">
+    <LoginComponent />
+  </div>
+  <div v-if="loggedIn">
+    <LogoutComponent />
+  </div>
 </template>
 
 <script>
 import PostComponent from './components/PostComponent.vue'
 import LoginComponent from './components/LoginComponent.vue'
+import LogoutComponent from './components/LogoutComponent.vue'
 
 export default {
   name: 'App',
   components: {
     PostComponent,
-    LoginComponent
+    LoginComponent,
+    LogoutComponent
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.getters.loggedIn;
+    }
   }
 }
 </script>
