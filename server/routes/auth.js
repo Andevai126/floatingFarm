@@ -5,11 +5,12 @@ var crypto = require('crypto');
 var db = require('../db');
 
 passport.use(new LocalStrategy(function verify(username, password, cb) {
-  db.get('SELECT * FROM users WHERE username = ?', [ username ], function(err, row) {
+  db.getConn().query('SELECT * FROM users WHERE username = ?', [ username ], function (err, results) {
     if (err) { return cb(err); }
-    if (!row) { return cb(null, false, { message: 'Incorrect username or password.' }); }
+    if (results.length === 0) { return cb(null, false, { message: 'Incorrect username or password.' }); }
 
-    crypto.pbkdf2(password, row.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+    const row = results[0];
+    crypto.pbkdf2(password, row.salt, 310000, 32, 'sha256', function (err, hashedPassword) {
       if (err) { return cb(err); }
       if (!crypto.timingSafeEqual(row.hashed_password, hashedPassword)) {
         return cb(null, false, { message: 'Incorrect username or password.' });
@@ -46,6 +47,7 @@ const router = express.Router();
 router.post('/login/password', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) {
+      console.log(err);
       return res.status(500).json({ success: false });
     }
     if (!user) {
@@ -70,6 +72,7 @@ router.post('/login/password', function(req, res, next) {
 router.post('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) {
+      console.log(err);
       return res.status(500).json({ success: false });
     }
     return res.json({ success: false });
@@ -80,20 +83,25 @@ router.post('/logout', function(req, res, next) {
 //   res.render('signup');
 // });
 
-router.post('/signup', function(req, res, next) {
-  var salt = crypto.randomBytes(16);
-  crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+router.post('/signup', function (req, res, next) {
+  const salt = crypto.randomBytes(16);
+  crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', function (err, hashedPassword) {
     if (err) { return next(err); }
-    db.run('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
+
+    db.getConn().query('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
       req.body.username,
       hashedPassword,
       salt
-    ], function(err) {
+    ], function (err, results) {
       if (err) { return next(err); }
+
+      console.log(results); //--------------------------------------
+
       var user = {
-        id: this.lastID,
+        id: results.insertId,
         username: req.body.username
       };
+
       req.login(user, function(err) {
         if (err) { return next(err); }
         res.redirect('/');

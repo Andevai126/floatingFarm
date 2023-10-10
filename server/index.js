@@ -5,11 +5,12 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 var passport = require('passport');
-var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser'); //maybe not needed?
 var session = require('express-session');
-var SQLiteStore = require('connect-sqlite3')(session);
+const MySQLStore = require('express-mysql-session')(session);
+const db = require('./db');
 
-const app = express()
+const app = express();
 
 // Middleware
 app.use(bodyParser.json());
@@ -24,7 +25,8 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false,
-    store: new SQLiteStore({ db: 'sessions.db', dir: './server/var/db' })
+    store: new MySQLStore(db.config, db.getConn()),
+    // need to turn on foodstream database > Settings > Server parameters > require_secure_transport !!!
 }));
 app.use(passport.authenticate('session'));
 

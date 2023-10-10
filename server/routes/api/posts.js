@@ -4,29 +4,10 @@ const fs = require('fs');
 
 const router = express.Router();
 
-var config = {
-    host: 'foodstream.mysql.database.azure.com',
-    user: 'sep',
-    password: 'FloatingFarm01!',
-    database: 'tetdatabase',
-    port: 3306,
-    ssl: {ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")}
-};
-
-const conn = new mysql.createConnection(config);
-
-conn.connect(
-    function (err) { 
-    if (err) { 
-        console.log("!!! Cannot connect !!! Error:");
-        throw err;
-    } else {
-       console.log("Connection established.");
-    }
-});
+var db = require('./../../db')
 
 function query(query, values, callback) {
-    conn.query(query, values,
+    db.conn.query(query, values,
     function (err, results, fields) {
         if (err) throw err;
         callback(results, fields);
