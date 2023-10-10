@@ -2,7 +2,7 @@ var express = require('express');
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var crypto = require('crypto');
-var db = require('../db');
+var db = require('../../db');
 
 passport.use(new LocalStrategy(function verify(username, password, cb) {
   db.getConn().query('SELECT * FROM users WHERE username = ?', [ username ], function (err, results) {

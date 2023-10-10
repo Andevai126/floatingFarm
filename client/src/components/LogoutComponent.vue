@@ -9,11 +9,11 @@
   import axios from 'axios';
 
   export default {
-    name: 'LogoutName',
+    name: 'LogoutComponent',
     methods: {
         async logout() {
             try {
-                const response = await axios.post('/auth/logout');
+                const response = await axios.post('/api/auth/logout');
                 // console.log(response.data, 'probable logout success');
 
                 // Global variable

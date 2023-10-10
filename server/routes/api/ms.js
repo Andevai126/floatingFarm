@@ -7,7 +7,7 @@ const router = express.Router();
 var db = require('./../../db')
 
 function query(query, values, callback) {
-    db.conn.query(query, values,
+    db.getConn().query(query, values,
     function (err, results, fields) {
         if (err) throw err;
         callback(results, fields);

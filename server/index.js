@@ -31,10 +31,10 @@ app.use(session({
 app.use(passport.authenticate('session'));
 
 // Routes
-const auth = require('./routes/auth');
-app.use('/auth', auth);
-const posts = require('./routes/api/posts');
-app.use('/api', posts);
+const auth = require('./routes/api/auth');
+app.use('/api/auth', auth);
+const posts = require('./routes/api/ms');
+app.use('/api/ms', posts);
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 

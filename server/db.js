@@ -67,7 +67,7 @@ function createUserDatabase() {
   console.log("init user db finished");
 };
 
-createUserDatabase();
+// createUserDatabase();
 
 module.exports = {
   getConn,

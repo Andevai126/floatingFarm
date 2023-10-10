@@ -17,7 +17,7 @@
   import axios from 'axios';
 
   export default {
-    name: 'LoginName',
+    name: 'LoginComponent',
     data() {
         return {
             username: '',
@@ -27,7 +27,7 @@
     methods: {
         async login() {
             try {
-                const response = await axios.post('/auth/login/password', {
+                const response = await axios.post('/api/auth/login/password', {
                     username: this.username,
                     password: this.password
                 });
