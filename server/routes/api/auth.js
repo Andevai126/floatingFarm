@@ -95,8 +95,6 @@ router.post('/signup', function (req, res, next) {
     ], function (err, results) {
       if (err) { return next(err); }
 
-      console.log(results); //--------------------------------------
-
       var user = {
         id: results.insertId,
         username: req.body.username
