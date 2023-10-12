@@ -1,10 +1,6 @@
 const express = require('express');
-const mysql = require('mysql2');
-const fs = require('fs');
-
 const router = express.Router();
-
-var db = require('./../../db')
+var db = require('../../db')
 
 function query(query, values, callback) {
     db.getConn().query(query, values,
@@ -14,27 +10,31 @@ function query(query, values, callback) {
     });
 }
 
-function endConnection() {
-    conn.end(function (err) { 
-        if (err) throw err;
-        else console.log('Done.') 
-    });
-}
+// function endConnection() {
+//     db.getConn().end(function (err) { 
+//         if (err) throw err;
+//         else console.log('Done.') 
+//     });
+// }
 
 // Get Post
-router.get('/', (req, res) => {
-    query('SELECT * FROM inventory;', [], (results, fields) => {
-        res.send(results);
-    });
+router.post('/', (req, res) => {
+    if (req.body.key === ""){
+        query('SELECT * FROM inventory;', [], (results, fields) => {
+            res.send(results);
+        });
+    } else {
+        res.status(401).send();
+    }
     // res.send('hello!');
 });
 
 // Add Post
-router.post('/', (req, res) => {
-    query('INSERT INTO inventory (name, quantity) VALUES (?,?);', ['test', 7], (results, fields) => {
-        res.status(201).send(req.body.text);
-    });
-});
+// router.post('/', (req, res) => {
+//     query('INSERT INTO inventory (name, quantity) VALUES (?,?);', ['test', 7], (results, fields) => {
+//         res.status(201).send(req.body.text);
+//     });
+// });
 
 // Delete Post
 // router.delete('/:id', (req, res) => {
