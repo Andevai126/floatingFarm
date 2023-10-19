@@ -19,7 +19,7 @@ function query(query, values, callback) {
 
 // Get Post
 router.post('/', (req, res) => {
-    if (req.body.key === ""){
+    if (req.body.key === process.env.API_KEY){
         query('SELECT * FROM inventory;', [], (results, fields) => {
             res.send(results);
         });

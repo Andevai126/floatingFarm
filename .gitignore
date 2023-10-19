@@ -1,5 +1,6 @@
 /client/node_modules
 /node_modules
-/server/db.js
 /server/routes/api/ms.js
 /DigiCertGlobalRootCA.crt.pem
+/notes.txt
+.env
