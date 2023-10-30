@@ -16,6 +16,7 @@ function query(query, values, callback) {
 // Get the role of a user
 router.get('/getRole', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
+        // <-- calculate something on this line...
         query(
         `SELECT roles.ID, roles.title FROM users
         LEFT JOIN roles ON users.roleID = roles.ID
