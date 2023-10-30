@@ -11,12 +11,13 @@ module.exports = {
     },
     "metadata": {
         "authority": "login.microsoftonline.com",
+        // "authority": process.env.TENANT_NAME + ".b2clogin.com",
         "discovery": ".well-known/openid-configuration",
         "version": "v2.0"
     },
     "settings": {
         "isB2C": true,
-        "validateIssuer": true,
+        "validateIssuer": false, // in production, set to true
         "passReqToCallback": false,
         "loggingLevel": "info"
     }

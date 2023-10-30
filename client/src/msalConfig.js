@@ -62,7 +62,8 @@ export const store = {
   msalInstance: null,
   accountId: "",
   authenticated: ref(false),
-  role: ref("")
+  roleId: ref(-1),
+  roleName: ref("")
 };
 
 export function handleResponse(resp) {

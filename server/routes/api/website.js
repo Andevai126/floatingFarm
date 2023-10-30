@@ -22,11 +22,13 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
         WHERE users.b2cObjectID = ` + req.authInfo['oid'] + ';', // still a bit unsecure
         [],
         (results, fields) => {
-            // if (results){
+            if (results){
                 res.status(200).send(results);
-            // } else{
-            //     res.status(401).send();
-            // }
+                // res.status(200).send("results!!!!!!!");
+            } else{
+                // res.status(500).send("no results");
+                res.status(500).send();
+            }
         });
     }
 );
