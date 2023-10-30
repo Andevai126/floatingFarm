@@ -2,40 +2,39 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const passport = require('passport');
+const config = require('./passportConfig');
 
-var passport = require('passport');
-var cookieParser = require('cookie-parser'); //maybe not needed?
-var session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
-const db = require('./db');
+const BearerStrategy = require('passport-azure-ad').BearerStrategy;
+const bearerStrategy = new BearerStrategy({
+    identityMetadata: `https://${config.credentials.tenantName}.b2clogin.com/${config.credentials.tenantName}.onmicrosoft.com/${config.policies.policyName}/${config.metadata.version}/${config.metadata.discovery}`,
+    clientID: config.credentials.clientID,
+    audience: config.credentials.clientID,
+    policyName: config.policies.policyName,
+    isB2C: config.settings.isB2C,
+    validateIssuer: config.settings.validateIssuer,
+    loggingLevel: config.settings.loggingLevel,
+    passReqToCallback: config.settings.passReqToCallback
+}, (token, done) => {
+    // Send user info using the second argument
+    done(null, { }, token);
+});
 
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-
+app.use(cors());
+app.use(passport.initialize());
+passport.use(bearerStrategy);
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false,
-    store: new MySQLStore(db.config, db.getConn()),
-    // need to turn on foodstream database > Settings > Server parameters > require_secure_transport !!!
-}));
-app.use(passport.authenticate('session'));
-
 // Routes
-const auth = require('./routes/api/auth');
-app.use('/api/auth', auth);
-const posts = require('./routes/api/ms');
-app.use('/api/ms', posts);
+const website = require('./routes/api/website');
+app.use('/api/website', website);
+const ms = require('./routes/api/ms');
+app.use('/api/ms', ms);
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 

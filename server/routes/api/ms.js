@@ -1,7 +1,9 @@
 const express = require('express');
-const router = express.Router();
-var db = require('../../db')
+const db = require('../../db')
 
+const router = express.Router();
+
+// Helper function
 function query(query, values, callback) {
     db.getConn().query(query, values,
     function (err, results, fields) {
@@ -10,23 +12,15 @@ function query(query, values, callback) {
     });
 }
 
-// function endConnection() {
-//     db.getConn().end(function (err) { 
-//         if (err) throw err;
-//         else console.log('Done.') 
-//     });
-// }
-
-// Get Post
-router.post('/', (req, res) => {
+// Get all different roles (test query)
+router.post('/getRoles', (req, res) => {
     if (req.body.key === process.env.API_KEY){
-        query('SELECT * FROM inventory;', [], (results, fields) => {
-            res.send(results);
+        query('SELECT * FROM roles;', [], (results, fields) => {
+            res.status(200).send(results);
         });
     } else {
         res.status(401).send();
     }
-    // res.send('hello!');
 });
 
 // Add Post

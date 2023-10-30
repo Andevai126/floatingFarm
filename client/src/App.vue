@@ -1,25 +1,31 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <GuestComponent />
+  <NavBar />
+  <WelcomeCard />
+  <GuestCard />
+  <AdminCard/>
+
+  <!-- <GuestComponent />
   <div v-if="!loggedIn">
     <LoginComponent />
   </div>
   <div v-if="loggedIn">
     <LogoutComponent />
-  </div>
+  </div> -->
 </template>
 
 <script>
-import GuestComponent from './components/GuestComponent.vue'
-import LoginComponent from './components/LoginComponent.vue'
-import LogoutComponent from './components/LogoutComponent.vue'
+import NavBar from './components/NavBar.vue'
+import WelcomeCard from './components/WelcomeCard.vue'
+import GuestCard from './components/GuestCard.vue'
+import AdminCard from './components/AdminCard.vue'
 
 export default {
   name: 'App',
   components: {
-    GuestComponent,
-    LoginComponent,
-    LogoutComponent
+    NavBar,
+    WelcomeCard,
+    GuestCard,
+    AdminCard
   },
   computed: {
     loggedIn() {

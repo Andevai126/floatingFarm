@@ -1,4 +1,5 @@
 <template>
+  <p>This is the GuestCard component</p>
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
@@ -32,7 +33,7 @@
 
 <script>
 export default {
-  name: 'GuestComponent',
+  name: 'GuestCard',
   props: {
     msg: String
   }
