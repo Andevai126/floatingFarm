@@ -1,3 +1,6 @@
+// require('dotenv').config();
+// require('dotenv').config({ path: './../../.env' });
+
 import { createApp } from 'vue';
 import App from './App.vue';
 import { initializeMsal } from './msalConfig';

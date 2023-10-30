@@ -1,5 +1,6 @@
 /node_modules
 /client/node_modules
 .env
+/client/environment.js
 /DigiCertGlobalRootCA.crt.pem
 /notes.txt
