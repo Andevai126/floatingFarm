@@ -44,12 +44,11 @@ export default {
   setup() {
     watch(store.authenticated, async (newVal) => {
       if (newVal == true) {
-        console.log("heyy ------------------");
-        var response = await callApi("http://localhost:5000/api/website/getRole");
-        console.log("heyy: -------", response);
-        store.roleId = response;
-        console.log(store.roleId);
-        // store.roleName = asdf;
+        callApi("http://localhost:5000/api/website/getRole").then((response) => {
+          store.roleId = response.data[0].ID;
+          store.roleName = response.data[0].title;
+          console.log(store.roleId);
+        });
       }
     });
   },

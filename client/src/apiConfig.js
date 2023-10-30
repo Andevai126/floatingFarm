@@ -58,18 +58,11 @@ export async function callApi(endpoint) {
     console.log(error);
   });
 
-  console.log(endpoint);
-  console.log("res accesstoken: ", response.accessToken);
-  // return 1;
-
-  await axios.get(endpoint, {headers: { 'Authorization': `Bearer ${response.accessToken}`}})
-  .then(res => {
-    console.log("callapi response: ", res)
-    return res;
-  }).catch(error => {
-    console.error(error);
-    // return "callapiresponseerror";
+  const res = await await axios.get(endpoint, {
+    headers: { 'Authorization': `Bearer ${response.accessToken}`}
   });
+
+  return res;
 }
 
 //create one or more helper functions?

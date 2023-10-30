@@ -20,7 +20,7 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
         query(
         `SELECT roles.ID, roles.title FROM users
         LEFT JOIN roles ON users.roleID = roles.ID
-        WHERE users.b2cObjectID = ` + req.authInfo['oid'] + ';', // still a bit unsecure
+        WHERE users.b2cObjectID = \"` + req.authInfo['oid'] + '\";', // still a bit unsecure
         [],
         (results, fields) => {
             if (results){
