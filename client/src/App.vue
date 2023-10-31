@@ -45,9 +45,11 @@ export default {
     watch(store.authenticated, async (newVal) => {
       if (newVal == true) {
         callApi("http://localhost:5000/api/website/getRole").then((response) => {
-          store.roleId = response.data[0].ID;
-          store.roleName = response.data[0].title;
-          console.log(store.roleId);
+          // console.log("response: ", response.data[0]);
+          // console.log("before: ", store.roleId)
+          store.roleId.value = response.data[0].ID;
+          store.roleTitle.value = response.data[0].title;
+          // console.log("after: ", store.roleId);
         });
       }
     });

@@ -1,12 +1,14 @@
 const express = require('express');
-const db = require('../../db')
 const passport = require('passport');
+const db = require('../../db')
 
 const router = express.Router();
 
+const conn = db.getConn();
+
 // Helper function
 function query(query, values, callback) {
-    db.getConn().query(query, values,
+    conn.query(query, values,
     function (err, results, fields) {
         if (err) throw err;
         callback(results, fields);

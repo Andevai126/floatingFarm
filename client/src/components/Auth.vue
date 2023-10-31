@@ -6,14 +6,8 @@
 </template>
   
 <script>
-
-
-    // import {signIn, signOut, editProfile } from './../authConfig';
     import { signIn, signOut, editProfile } from './../apiConfig';
     import { store } from './../msalConfig';
-
-    // const loggedIn = true;
-    // const loggedIn = isAuthenticated();
 
     export default {
         name: 'AuthComponent',
@@ -22,13 +16,6 @@
                 authenticated: store.authenticated
             };
         },
-        // computed: {
-        //     isUserLoggedIn: {
-        //         get: function () {
-        //             return isAuthenticated
-        //         }
-        //     }
-        // },
         methods: {
             async signIn() {
                 signIn();
@@ -43,12 +30,7 @@
     }
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- <style scoped> -->
 
-
-
-
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <!-- <style scoped> -->
-
-  <!-- </style> -->
-  ../helpstuff/apiConfig../apiConfig
+<!-- </style> -->

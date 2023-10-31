@@ -3,7 +3,6 @@ const axios = require('axios');
 import { store, handleResponse, b2cScopes, b2cPolicies } from './msalConfig';
 
 export function signIn() {
-  console.log(store);
   (store.msalInstance).loginPopup({
     scopes: b2cScopes
   }).then(handleResponse).then(() => {store.authenticated.value = true}).catch(function (error) {
@@ -16,7 +15,8 @@ export function signOut() {
     account: (store.msalInstance).getAccountByHomeId(store.accountId)
   }).then(() => {
     store.authenticated.value = false;
-    // window.location.reload();
+    store.roleId.value = -1;
+    store.roleTitle.value = "";
   });
 }
 
