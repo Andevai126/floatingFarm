@@ -27,9 +27,7 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
         (results, fields) => {
             if (results){
                 res.status(200).send(results);
-                // res.status(200).send("results!!!!!!!");
             } else{
-                // res.status(500).send("no results");
                 res.status(500).send();
             }
         });

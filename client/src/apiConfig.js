@@ -1,6 +1,7 @@
 const msal = require('@azure/msal-browser');
 const axios = require('axios');
-import { store, handleResponse, b2cScopes, b2cPolicies } from './msalConfig';
+import { store } from './store';
+import { handleResponse, b2cScopes, b2cPolicies } from './msalConfig';
 
 export function signIn() {
   (store.msalInstance).loginPopup({

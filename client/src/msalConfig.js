@@ -1,5 +1,5 @@
-import { ref } from 'vue'
 // import { PublicClientApplication } from '@azure/msal-browser';
+import { store } from './store';
 const msal = require('@azure/msal-browser');
 
 const env = require('./../environment');
@@ -20,7 +20,7 @@ export const b2cPolicies = {
     }
   },
   authorityDomain: env.authorityDomain
-}
+};
 
 export const msalConfig = {
   auth: {
@@ -56,14 +56,6 @@ export const msalConfig = {
   //     }
   //   }
   // }
-};
-
-export const store = {
-  msalInstance: null,
-  accountId: "",
-  authenticated: ref(false),
-  roleId: ref(-1),
-  roleTitle: ref("")
 };
 
 export function handleResponse(resp) {

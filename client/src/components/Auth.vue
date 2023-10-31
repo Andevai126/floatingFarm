@@ -7,7 +7,7 @@
   
 <script>
     import { signIn, signOut, editProfile } from './../apiConfig';
-    import { store } from './../msalConfig';
+    import { store } from './../store';
 
     export default {
         name: 'AuthComponent',

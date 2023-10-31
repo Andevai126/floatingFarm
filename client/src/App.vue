@@ -25,7 +25,7 @@
 
 <script>
 import { watch } from 'vue';
-import { store } from './msalConfig';
+import { store } from './store';
 import { callApi } from './apiConfig'
 
 import NavBar from './components/NavBar.vue'
