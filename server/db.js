@@ -26,6 +26,5 @@ function getConn() {
 }
 
 module.exports = {
-  getConn,
-  config
+  getConn
 };

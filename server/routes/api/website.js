@@ -4,8 +4,6 @@ const db = require('../../db')
 
 const router = express.Router();
 
-// const conn = db.getConn();
-
 // Helper function
 function query(query, values, callback) {
     db.getConn().query(query, values,
