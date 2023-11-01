@@ -10,6 +10,15 @@
     <div v-if="roleId==2">
       <AdminCard/>
     </div>
+    <div v-if="roleId==3">
+      <SupplierCard/>
+    </div>
+    <div v-if="roleId==4">
+      <UnpackerCard/>
+    </div>
+    <div v-if="roleId==5">
+      <FarmerCard/>
+    </div>
   </div>
 </template>
 
@@ -22,6 +31,9 @@ import NavBar from './components/NavBar.vue'
 import WelcomeCard from './components/WelcomeCard.vue'
 import GuestCard from './components/GuestCard.vue'
 import AdminCard from './components/AdminCard.vue'
+import SupplierCard from './components/SupplierCard.vue';
+import UnpackerCard from './components/UnpackerCard.vue';
+import FarmerCard from './components/FarmerCard.vue';
 
 export default {
   name: 'App',
@@ -29,7 +41,10 @@ export default {
     NavBar,
     WelcomeCard,
     GuestCard,
-    AdminCard
+    AdminCard,
+    SupplierCard,
+    UnpackerCard,
+    FarmerCard
   },
   // setup() {
   //   watch(store.authenticated, async (newVal) => {

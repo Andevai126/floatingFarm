@@ -132,6 +132,7 @@ function setCredentials(accessToken) {
   });
 }
 
+// Clear all personal information
 export function clearCredentials() {
   store.username.value = "";
   store.roleId.value = -1;

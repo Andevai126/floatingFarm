@@ -1,6 +1,6 @@
 <template>
-    <p>This is the NavBar component! Welcome {{ username }} ({{ roleTitle }})</p>
     <img alt="Vue logo" src="./../assets/logo.png">
+    <p>This is the NavBar component! Welcome {{ username }} ({{ roleTitle }})</p>
     <Auth />
 </template>
 
