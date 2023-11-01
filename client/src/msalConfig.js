@@ -1,6 +1,7 @@
-// import { PublicClientApplication } from '@azure/msal-browser';
+// import { PublicClientApplication, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { store } from './store';
 const msal = require('@azure/msal-browser');
+const axios = require('axios');
 
 const env = require('./../environment');
 
@@ -22,7 +23,7 @@ export const b2cPolicies = {
   authorityDomain: env.authorityDomain
 };
 
-export const msalConfig = {
+const msalConfig = {
   auth: {
     clientId: env.clientId, // This is the ONLY mandatory field; everything else is optional.
     authority: b2cPolicies.authorities.signUpSignIn.authority, // Choose sign-up/sign-in user-flow as your default.
@@ -58,10 +59,27 @@ export const msalConfig = {
   // }
 };
 
-export function handleResponse(resp) {
+// Initialize msal
+export function initializeMsal() {
+  // Set msal instance
+  store.msalInstance = new msal.PublicClientApplication(msalConfig);
+
+  // Configure msal
+  store.msalInstance.initialize().then(() => {
+    store.msalInstance.handleRedirectPromise().then(setAccount).then(authenticateAccount());
+  }).catch((error) => {
+    console.log("Initialization of msal failed:", error);
+  });
+}
+
+// Set account
+export function setAccount(resp) {
+  // If called after request, set account with new info
   if (resp !== null) {
     store.accountId = resp.account.homeAccountId;
     (store.msalInstance).setActiveAccount(resp.account);
+  
+  // Otherwise, try to set account with data saved in session
   } else {
     const currentAccounts = (store.msalInstance).getAllAccounts();
 
@@ -82,27 +100,70 @@ export function handleResponse(resp) {
   }
 }
 
-function afterResponse() {
-  store.msalInstance
-  .acquireTokenSilent({
+// Check if account is still authenticated and set credentials
+export function authenticateAccount() {
+  const request = {
     account: (store.msalInstance).getAccountByHomeId(store.accountId),
     scopes: b2cScopes
-  }).then(() => {
-      store.authenticated.value = true
-      console.log("silent token acquisition success. :::")
+  };
 
-  })
-  .catch(() => {
-      store.authenticated.value = false
-      console.log("silent token acquisition fails. :::");
+  store.msalInstance.acquireTokenSilent(request).then((response) => {
+    store.authenticated.value = true;
+    setCredentials(response.accessToken);
+  }).catch(() => {
+    store.authenticated.value = false;
+    clearCredentials();
   })
 }
 
-export function initializeMsal() {
-  store.msalInstance = new msal.PublicClientApplication(msalConfig);
+// Set credentials
+function setCredentials(accessToken) {
+  // Set username
+  store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.given_name;
 
-  store.msalInstance.initialize()
-  .then(() => {
-    store.msalInstance.handleRedirectPromise().then((resp) => handleResponse(resp)).then(afterResponse())
+  // Set role
+  axios.get("http://localhost:5000/api/website/getRole", {
+    headers: { 'Authorization': `Bearer ${accessToken}`}
+  }).then((response) => {
+    store.roleId.value = response.data[0].ID;
+    store.roleTitle.value = response.data[0].title;
+  }).catch((error) => {
+    console.log("Could not get role:", error);
+  });
+}
+
+export function clearCredentials() {
+  store.username.value = "";
+  store.roleId.value = -1;
+  store.roleTitle.value = "";
+}
+
+// Acquire access token
+export async function getTokenPopup() {
+  const request = {
+    account: (store.msalInstance).getAccountByHomeId(store.accountId),
+    scopes: b2cScopes
+  };
+
+  // Try to aquire token silently
+  return await (store.msalInstance).acquireTokenSilent(request).then(() => {
+    store.authenticated.value = true;
+
+  // Otherwise, aquire token with popup
+  }).catch(async (error) => {
+    if (error instanceof msal.InteractionRequiredAuthError) {
+      return await (store.msalInstance).acquireTokenPopup(request).then((response) => {
+        store.authenticated.value = true;
+        setCredentials(response);
+      }).catch((error) => {
+        store.authenticated.value = false;
+        clearCredentials();
+        console.error(error);
+      });
+    } else {
+      store.authenticated.value = false;
+      clearCredentials();
+      console.error(error);
+    }
   });
 }

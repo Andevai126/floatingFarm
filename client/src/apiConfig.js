@@ -1,14 +1,11 @@
-const msal = require('@azure/msal-browser');
-const axios = require('axios');
 import { store } from './store';
-import { handleResponse, b2cScopes, b2cPolicies } from './msalConfig';
+import { b2cScopes, b2cPolicies, setAccount, authenticateAccount, clearCredentials } from './msalConfig';
+// const axios = require('axios');
 
 export function signIn() {
   (store.msalInstance).loginPopup({
     scopes: b2cScopes
-  }).then(handleResponse).then(() => {store.authenticated.value = true}).catch(function (error) {
-    console.log(error);
-  });
+  }).then(setAccount).then(authenticateAccount);
 }
 
 export function signOut() {
@@ -16,55 +13,34 @@ export function signOut() {
     account: (store.msalInstance).getAccountByHomeId(store.accountId)
   }).then(() => {
     store.authenticated.value = false;
-    store.roleId.value = -1;
-    store.roleTitle.value = "";
+    clearCredentials();
   });
 }
 
 export function editProfile() {
   (store.msalInstance).loginPopup({
     authority: b2cPolicies.authorities.editProfile.authority
-  }).then(() => {store.authenticated.value = true});
-}
-
-// add authenticated stuff
-async function getTokenPopup() {
-  const request = {
-    account: (store.msalInstance).getAccountByHomeId(store.accountId),
-    scopes: b2cScopes
-  };
-
-  return await (store.msalInstance)
-  .acquireTokenSilent(request)
-  .catch(async (error) => {
-    console.log("silent token acquisition fails.");
-
-    if (error instanceof msal.InteractionRequiredAuthError) {
-      console.log("acquiring token using popup");
-
-      return await (store.msalInstance)
-      .acquireTokenPopup(request)
-      .catch((error) => {
-        console.error(error);
-      });
-    } else {
-      console.error(error);
-    }
+  }).then(setAccount).then(() => {
+    store.authenticated.value = true;
+    store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.given_name;
+  }).catch(() => {
+    console.error("User cancelled flow");
   });
 }
 
-export async function callApi(endpoint) {
-  const response = await getTokenPopup()
-  .catch(error => {
-    console.log(error);
-  });
+// export async function getSomething(endpoint) {
+// // TRY FIRST with accesstoken in account.idToken
+//   const response = await getTokenPopup()
+//   .catch(error => {
+//     console.log(error);
+//   });
 
-  const res = await await axios.get(endpoint, {
-    headers: { 'Authorization': `Bearer ${response.accessToken}`}
-  });
+//   const res = await axios.get(endpoint, {
+//     headers: { 'Authorization': `Bearer ${response.accessToken}`}
+//   });
 
-  return res;
-}
+//   return res;
+// }
 
 //create one or more helper functions?
 //create api to get role of person for in the navbar.
@@ -72,3 +48,5 @@ export async function callApi(endpoint) {
 //what if multiple accounts/emails from same supplier?
 //get account name from store.msal.account?
 //supplier id is from other table
+
+// move signin signout edit profile AND GETTOKENPOPUP to msalconfig

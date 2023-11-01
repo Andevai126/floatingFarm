@@ -11,7 +11,6 @@ module.exports = {
     },
     "metadata": {
         "authority": "login.microsoftonline.com",
-        // "authority": process.env.TENANT_NAME + ".b2clogin.com",
         "discovery": ".well-known/openid-configuration",
         "version": "v2.0"
     },

@@ -4,11 +4,11 @@ const db = require('../../db')
 
 const router = express.Router();
 
-const conn = db.getConn();
+// const conn = db.getConn();
 
 // Helper function
 function query(query, values, callback) {
-    conn.query(query, values,
+    db.getConn().query(query, values,
     function (err, results, fields) {
         if (err) throw err;
         callback(results, fields);

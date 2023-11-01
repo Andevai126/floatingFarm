@@ -10,23 +10,13 @@
     <div v-if="roleId==2">
       <AdminCard/>
     </div>
-    
   </div>
-  
-
-  <!-- <GuestComponent />
-  <div v-if="!loggedIn">
-    <LoginComponent />
-  </div>
-  <div v-if="loggedIn">
-    <LogoutComponent />
-  </div> -->
 </template>
 
 <script>
-import { watch } from 'vue';
+// import { watch } from 'vue';
 import { store } from './store';
-import { callApi } from './apiConfig'
+// import { callApi } from './apiConfig'
 
 import NavBar from './components/NavBar.vue'
 import WelcomeCard from './components/WelcomeCard.vue'
@@ -41,19 +31,21 @@ export default {
     GuestCard,
     AdminCard
   },
-  setup() {
-    watch(store.authenticated, async (newVal) => {
-      if (newVal == true) {
-        callApi("http://localhost:5000/api/website/getRole").then((response) => {
-          // console.log("response: ", response.data[0]);
-          // console.log("before: ", store.roleId)
-          store.roleId.value = response.data[0].ID;
-          store.roleTitle.value = response.data[0].title;
-          // console.log("after: ", store.roleId);
-        });
-      }
-    });
-  },
+  // setup() {
+  //   watch(store.authenticated, async (newVal) => {
+  //     if (newVal == true) {
+  //       callApi("http://localhost:5000/api/website/getRole").then((response) => {
+  //         // console.log("response: ", response.data[0]);
+  //         // console.log("before: ", store.roleId)
+  //         store.roleId.value = response.data[0].ID;
+  //         store.roleTitle.value = response.data[0].title;
+  //         // console.log("after: ", store.roleId);
+
+  //         console.log((store.msalInstance).getAccountByHomeId(store.accountId));
+  //       });
+  //     }
+  //   });
+  // },
   data() {
     return {
       authenticated: store.authenticated,
