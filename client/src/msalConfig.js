@@ -119,7 +119,7 @@ export function authenticateAccount() {
 // Set credentials
 function setCredentials(accessToken) {
   // Set username
-  store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.given_name;
+  store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.name;
 
   // Set role
   axios.get("http://localhost:5000/api/website/getRole", {
@@ -155,7 +155,7 @@ export async function getTokenPopup() {
     if (error instanceof msal.InteractionRequiredAuthError) {
       return await (store.msalInstance).acquireTokenPopup(request).then((response) => {
         store.authenticated.value = true;
-        setCredentials(response);
+        setCredentials(response.accessToken);
       }).catch((error) => {
         store.authenticated.value = false;
         clearCredentials();

@@ -22,7 +22,7 @@ export function editProfile() {
     authority: b2cPolicies.authorities.editProfile.authority
   }).then(setAccount).then(() => {
     store.authenticated.value = true;
-    store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.given_name;
+    store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.name;
   }).catch(() => {
     console.error("User cancelled flow");
   });
