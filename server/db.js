@@ -7,14 +7,15 @@ var config = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   port: process.env.DB_PORT,
-  ssl: {ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")}
+  ssl: {ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")},
+  multipleStatements: false
 };
 
 function getConn() {
   var conn = new mysql.createConnection(config);
 
   conn.connect(function (err) { 
-    if (err) { 
+    if (err) {
       console.log("!!! Cannot connect !!! Error:");
       throw err;
     } else {

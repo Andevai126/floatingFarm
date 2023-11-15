@@ -127,6 +127,15 @@ function setCredentials(accessToken) {
   }).then((response) => {
     store.roleId.value = response.data[0].ID;
     store.roleTitle.value = response.data[0].title;
+
+    if (store.roleId.value == 2) {
+      axios.get("http://localhost:5000/api/website/getUsers", {
+        headers: { 'Authorization': `Bearer ${accessToken}`}
+      }).then((response) => {
+        console.log(response);
+      });
+    }
+
   }).catch((error) => {
     console.log("Could not get role:", error);
   });
@@ -146,11 +155,11 @@ export async function getTokenPopup() {
     scopes: b2cScopes
   };
 
-  // Try to aquire token silently
+  // Try to acquire token silently
   return await (store.msalInstance).acquireTokenSilent(request).then(() => {
     store.authenticated.value = true;
 
-  // Otherwise, aquire token with popup
+  // Otherwise, acquire token with popup
   }).catch(async (error) => {
     if (error instanceof msal.InteractionRequiredAuthError) {
       return await (store.msalInstance).acquireTokenPopup(request).then((response) => {
