@@ -1,48 +1,45 @@
 <template>
     <p>This is the AdminCard component!</p>
-    <li v-for="item in items" :key="item">
-        {{ item.id }}
-        {{ item.displayName }}
-        {{ item.roleID }}
-        {{ item.roleTitle }}
-        {{ item.supplierID }}
-        {{ item.supplierName }}
-        {{ item.isInAzure }}
-        {{ item.isInDatabase }}
-        <button @click="saveChanges(item.id)">Log ID (save changes)</button>
-        <button @click="deleteUser(item.id)">Log ID (delete user)</button>
+    <li v-for="user in users" :key="user">
+        <UserInList :user="user" :roles="roles" :suppliers="suppliers"/>
     </li>
     <img alt="Admin design" src="./../assets/Admin.png">
 </template>
 
 <script>
     import { ref } from 'vue';
-    // import { store } from './../store';
-    import { getUsers } from './../apiConfig';
+    import UserInList from './UserInList.vue'
+    import { getUsers, getRoles, getSuppliers } from './../apiConfig';
     
     var listOfUsers = ref([]);
+    var listOfRoles = ref([]);
+    var listOfSuppliers = ref([]);
 
     export default {
         name: 'AdminCard',
-        methods: {
-            saveChanges(id) {
-                console.log("saved ", id);
-            },
-            deleteUser(id) {
-                console.log("deleted ", id)
-            }
+        components: {
+            UserInList
         },
         setup() {
             getUsers().then((users) => {
-                console.log("retrieved users: ", users);
+                // console.log("retrieved users: ", users);
                 listOfUsers.value = users;
+            });
+            getRoles().then((roles) => {
+                // console.log("retrieved roles: ", roles);
+                listOfRoles.value = roles;
+            });
+            getSuppliers().then((suppliers) => {
+                // console.log("retrieved suppliers: ", suppliers);
+                listOfSuppliers.value = suppliers;
             });
         },
         data() {
             return {
-                items: listOfUsers
+                users: listOfUsers,
+                roles: listOfRoles,
+                suppliers: listOfSuppliers
             };
         }
     }
-
 </script>

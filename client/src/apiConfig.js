@@ -31,9 +31,9 @@ export function editProfile() {
   });
 }
 
-function getUsersApi(accessToken) {
+function simpleGetApi(endpoint, accessToken) {
   return new Promise((resolve, reject) => {
-    axios.get("http://localhost:5000/api/website/getUsers", {
+    axios.get(endpoint, {
       headers: { 'Authorization': `Bearer ${accessToken}`}
     }).then((response) => {
       resolve(response.data);
@@ -46,13 +46,47 @@ function getUsersApi(accessToken) {
 export async function getUsers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
-    getUsersApi(store.accessToken).then((users) => {
+    simpleGetApi("http://localhost:5000/api/website/getUsers", store.accessToken).then((users) => {
       resolve(users);
     // Try with acquired access token
     }).catch(async () => {
       await getTokenPopup();
-      getUsersApi(store.accessToken).then((users) => {
+      simpleGetApi("http://localhost:5000/api/website/getUsers", store.accessToken).then((users) => {
         resolve(users);
+      }).catch(() => {
+        reject();
+      })
+    });
+  });
+}
+
+export async function getRoles() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi("http://localhost:5000/api/website/getRoles", store.accessToken).then((roles) => {
+      resolve(roles);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenPopup();
+      simpleGetApi("http://localhost:5000/api/website/getRoles", store.accessToken).then((roles) => {
+        resolve(roles);
+      }).catch(() => {
+        reject();
+      })
+    });
+  });
+}
+
+export async function getSuppliers() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi("http://localhost:5000/api/website/getSuppliers", store.accessToken).then((suppliers) => {
+      resolve(suppliers);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenPopup();
+      simpleGetApi("http://localhost:5000/api/website/getSuppliers", store.accessToken).then((suppliers) => {
+        resolve(suppliers);
       }).catch(() => {
         reject();
       })

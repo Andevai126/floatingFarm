@@ -8,9 +8,12 @@ const router = express.Router();
 
 // Helper function to query database
 function query(query, values, callback) {
-    db.getConn().query(query, values,
+    const conn = db.getConn();
+    conn.query(query, values,
     function (err, results, fields) {
         if (err) throw err;
+        conn.end();
+        console.log("Connection broken.")
         callback(results, fields);
     });
 }
