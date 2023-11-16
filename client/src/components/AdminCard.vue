@@ -6,6 +6,7 @@
         {{ item.roleID }}
         {{ item.roleTitle }}
         {{ item.supplierID }}
+        {{ item.supplierName }}
         {{ item.isInAzure }}
         {{ item.isInDatabase }}
         <button @click="saveChanges(item.id)">Log ID (save changes)</button>

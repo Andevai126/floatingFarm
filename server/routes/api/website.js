@@ -58,8 +58,9 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
         // Check if role is of Admin
         validRole(req.authInfo['oid'], [2]).then(async () => {
             query(
-                `SELECT users.b2cObjectID AS id, roleID, roles.title AS roleTitle, supplierID FROM users
-                LEFT JOIN roles ON users.roleID = roles.ID`,
+                `SELECT users.b2cObjectID AS id, roleID, roles.title AS roleTitle, supplierID, suppliers.name AS supplierName FROM users
+                LEFT JOIN roles ON users.roleID = roles.ID
+                LEFT JOIN suppliers ON users.supplierID = suppliers.ID;`,
                 [],
                 async (results, fields) => {
                     if (results){
@@ -101,6 +102,7 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
                                 roleID: databaseItem ? databaseItem.roleID : null,
                                 roleTitle: databaseItem ? databaseItem.roleTitle : null,
                                 supplierID: databaseItem ? databaseItem.supplierID : null,
+                                supplierName: databaseItem ? databaseItem.supplierName : null,
                                 isInAzure: !!azureItem,
                                 isInDatabase: !!databaseItem
                             };
