@@ -52,10 +52,10 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
     }
 );
 
-// Get list of users, if you have the admin role
+// Get a list of users
 router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check if role is of Admin
+        // Check for Admin role
         validRole(req.authInfo['oid'], [2]).then(async () => {
             query(
                 `SELECT users.b2cObjectID AS id, roleID, roles.title AS roleTitle, supplierID, suppliers.name AS supplierName FROM users
@@ -117,7 +117,51 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
             );
         }).catch(() => {
             res.status(401).send();
-        });       
+        });
+    }
+);
+
+// Get a list of roles
+router.get('/getRoles', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin role
+        validRole(req.authInfo['oid'], [2]).then(async () => {
+            query(
+                `SELECT * FROM roles;`,
+                [],
+                (results, fields) => {
+                    if (results){
+                        res.status(200).send(results);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
+// Get a list of suppliers
+router.get('/getSuppliers', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin role
+        validRole(req.authInfo['oid'], [2]).then(async () => {
+            query(
+                `SELECT suppliers.ID, suppliers.name FROM suppliers;`,
+                [],
+                (results, fields) => {
+                    if (results){
+                        res.status(200).send(results);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
     }
 );
 
