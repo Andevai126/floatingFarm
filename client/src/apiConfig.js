@@ -5,7 +5,9 @@ const axios = require('axios');
 export function signIn() {
   (store.msalInstance).loginPopup({
     scopes: b2cScopes
-  }).then(setAccount).then(authenticateAccount);
+  }).then(setAccount).then(authenticateAccount).catch(() => {
+    console.error("User cancelled login flow");
+  });
 }
 
 export function signOut() {
@@ -25,7 +27,7 @@ export function editProfile() {
     store.authenticated.value = true;
     store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.name;
   }).catch(() => {
-    console.error("User cancelled flow");
+    console.error("User cancelled edit profile flow");
   });
 }
 
