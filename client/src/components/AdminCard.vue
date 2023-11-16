@@ -8,6 +8,8 @@
         {{ item.supplierID }}
         {{ item.isInAzure }}
         {{ item.isInDatabase }}
+        <button @click="saveChanges(item.id)">Log ID (save changes)</button>
+        <button @click="deleteUser(item.id)">Log ID (delete user)</button>
     </li>
     <img alt="Admin design" src="./../assets/Admin.png">
 </template>
@@ -21,11 +23,14 @@
 
     export default {
         name: 'AdminCard',
-        // methods: {
-        //     async getUsers() {
-        //         // await
-        //     }
-        // },
+        methods: {
+            saveChanges(id) {
+                console.log("saved ", id);
+            },
+            deleteUser(id) {
+                console.log("deleted ", id)
+            }
+        },
         setup() {
             getUsers().then((users) => {
                 console.log("retrieved users: ", users);
