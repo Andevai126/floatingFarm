@@ -109,9 +109,11 @@ export function authenticateAccount() {
 
   store.msalInstance.acquireTokenSilent(request).then((response) => {
     store.authenticated.value = true;
+    store.accessToken = response.accessToken;
     setCredentials(response.accessToken);
   }).catch(() => {
     store.authenticated.value = false;
+    store.accessToken = "";
     clearCredentials();
   })
 }
@@ -127,15 +129,6 @@ function setCredentials(accessToken) {
   }).then((response) => {
     store.roleId.value = response.data[0].ID;
     store.roleTitle.value = response.data[0].title;
-
-    if (store.roleId.value == 2) {
-      axios.get("http://localhost:5000/api/website/getUsers", {
-        headers: { 'Authorization': `Bearer ${accessToken}`}
-      }).then((response) => {
-        console.log(response);
-      });
-    }
-
   }).catch((error) => {
     console.log("Could not get role:", error);
   });
@@ -156,15 +149,18 @@ export async function getTokenPopup() {
   };
 
   // Try to acquire token silently
-  return await (store.msalInstance).acquireTokenSilent(request).then(() => {
+  return await (store.msalInstance).acquireTokenSilent(request).then((response) => {
     store.authenticated.value = true;
+    store.accessToken = response.accessToken;
 
   // Otherwise, acquire token with popup
   }).catch(async (error) => {
     if (error instanceof msal.InteractionRequiredAuthError) {
       return await (store.msalInstance).acquireTokenPopup(request).then((response) => {
         store.authenticated.value = true;
+        store.accessToken = response.accessToken;
         setCredentials(response.accessToken);
+        
       }).catch((error) => {
         store.authenticated.value = false;
         clearCredentials();

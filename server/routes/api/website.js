@@ -16,23 +16,17 @@ function query(query, values, callback) {
 }
 
 // Helper function to safely verify the role of the user
-function validRole(b2cObjectID, allowedRoles, callback) {
+function validRole(b2cObjectID, allowedRoles) {
     return new Promise((resolve, reject) => {
-        console.log("id: ", b2cObjectID);
-        console.log("roles: ", allowedRoles);
-
         query(
             `SELECT roles.ID, roles.title FROM users
             LEFT JOIN roles ON users.roleID = roles.ID
             WHERE users.b2cObjectID = ?;`,
             [b2cObjectID],
             (results, fields) => {
-                console.log("results: ", results);
                 if (results && allowedRoles.includes(results[0].ID)){
-                    console.log("yes");
                     resolve();
                 } else {
-                    console.log("no");
                     reject();
                 }
             }

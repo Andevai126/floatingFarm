@@ -1,6 +1,6 @@
 import { store } from './store';
-import { b2cScopes, b2cPolicies, setAccount, authenticateAccount, clearCredentials } from './msalConfig';
-// const axios = require('axios');
+import { b2cScopes, b2cPolicies, setAccount, authenticateAccount, clearCredentials, getTokenPopup } from './msalConfig';
+const axios = require('axios');
 
 export function signIn() {
   (store.msalInstance).loginPopup({
@@ -13,6 +13,7 @@ export function signOut() {
     account: (store.msalInstance).getAccountByHomeId(store.accountId)
   }).then(() => {
     store.authenticated.value = false;
+    store.accessToken = "";
     clearCredentials();
   });
 }
@@ -28,25 +29,31 @@ export function editProfile() {
   });
 }
 
-// export async function getSomething(endpoint) {
-// // TRY FIRST with accesstoken in account.idToken
-//   const response = await getTokenPopup()
-//   .catch(error => {
-//     console.log(error);
-//   });
+function getUsersApi(accessToken) {
+  return new Promise((resolve, reject) => {
+    axios.get("http://localhost:5000/api/website/getUsers", {
+      headers: { 'Authorization': `Bearer ${accessToken}`}
+    }).then((response) => {
+      resolve(response.data);
+    }).catch(() => {
+      reject();
+    });
+  });
+}
 
-//   const res = await axios.get(endpoint, {
-//     headers: { 'Authorization': `Bearer ${response.accessToken}`}
-//   });
-
-//   return res;
-// }
-
-//create one or more helper functions?
-//create api to get role of person for in the navbar.
-//get username from not database?
-//what if multiple accounts/emails from same supplier?
-//get account name from store.msal.account?
-//supplier id is from other table
-
-// move signin signout edit profile AND GETTOKENPOPUP to msalconfig
+export async function getUsers() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    getUsersApi(store.accessToken).then((users) => {
+      resolve(users);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenPopup();
+      getUsersApi(store.accessToken).then((users) => {
+        resolve(users);
+      }).catch(() => {
+        reject();
+      })
+    });
+  });
+}
