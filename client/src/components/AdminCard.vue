@@ -1,8 +1,13 @@
 <template>
     <p>This is the AdminCard component!</p>
     <li v-for="item in items" :key="item">
-        {{ item.displayName }}
         {{ item.id }}
+        {{ item.displayName }}
+        {{ item.roleID }}
+        {{ item.roleTitle }}
+        {{ item.supplierID }}
+        {{ item.isInAzure }}
+        {{ item.isInDatabase }}
     </li>
     <img alt="Admin design" src="./../assets/Admin.png">
 </template>
