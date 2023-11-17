@@ -43,6 +43,20 @@ function simpleGetApi(endpoint, accessToken) {
   });
 }
 
+function simplePostApi(endpoint, accessToken, body) {
+  return new Promise((resolve, reject) => {
+    axios.post(endpoint, body, {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    }).then(() => {
+      console.log("Success");
+      resolve();
+    }).catch((error) => {
+      console.log("Failed: ", error);
+      reject();
+    });
+  });
+}
+
 export async function getUsers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -90,6 +104,32 @@ export async function getSuppliers() {
       }).catch(() => {
         reject();
       })
+    });
+  });
+}
+
+export async function updateUser(id, role, supplier) {
+  // Try with stored access token
+  simplePostApi("http://localhost:5000/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
+  // Try with acquired access token
+  .catch(async () => {
+    await getTokenPopup();
+    simplePostApi("http://localhost:5000/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
+    .catch((error) => {
+      console.log("Failed to update user: ", error);
+    });
+  });
+}
+
+export function deleteUser(id) {
+  // Try with stored access token
+  simplePostApi("http://localhost:5000/api/website/deleteUser", store.accessToken, {id: id})
+  // Try with acquired access token
+  .catch(async () => {
+    await getTokenPopup();
+    simplePostApi("http://localhost:5000/api/website/deleteUser", store.accessToken, {id: id})
+    .catch((error) => {
+      console.error("Failed to delete user: ", error);
     });
   });
 }

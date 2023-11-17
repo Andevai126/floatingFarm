@@ -12,12 +12,13 @@
     </select>
     {{ user.isInAzure }}
     {{ user.isInDatabase }}
-    <button @click="saveChanges(user.id)">Log ID (save changes)</button>
+    <button @click="updateUser(user.id)">Log ID (save changes)</button>
     <button @click="deleteUser(user.id)">Log ID (delete user)</button>
 </template>
 
 <script>
     import { toRef } from 'vue';
+    import { updateUser, deleteUser } from './../apiConfig';
 
     var defaultRole = null;
     var defaultSupplier = null;
@@ -25,11 +26,13 @@
     export default {
         name: 'UserInList',
         methods: {
-            saveChanges(id) {
-                console.log("saved ", id, this.selectedRole, this.selectedSupplier);
+            updateUser(id) {
+                console.log("saving ", id, this.selectedRole, this.selectedSupplier);
+                updateUser(id, this.selectedRole, this.selectedSupplier);
             },
             deleteUser(id) {
-                console.log("deleted ", id)
+                console.log("deleting ", id)
+                deleteUser(id);
             }
         },
         props: {

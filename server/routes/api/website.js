@@ -46,7 +46,6 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
         WHERE users.b2cObjectID = ?;`,
         [req.authInfo['oid']],
         (results, fields) => {
-            console.log("role results: ", results)
             // If present, send corresponding role
             if (results[0]){
                 res.status(200).send(results[0]);
@@ -54,14 +53,11 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
             } else{
                 const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
                 if (regex.test(req.authInfo['oid'])) {
-                  console.log("Valid GUID");
                   query(
                     `INSERT INTO users (b2cObjectID, roleID)
                     VALUES (?, 1);`,
                     [req.authInfo['oid']],
                     (results, fields) => {
-                        console.log("after created: ", results);
-                        console.log("test", results.affectedRows);
                         if (results.affectedRows = 1) {
                             res.status(200).json({ID: 1, title: 'Guest'});
                         } else {
@@ -71,7 +67,6 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
                     }
                   )
                 } else {
-                  console.log("Not a valid GUID");
                   res.status(401).send()
                 }
                 // res.status(500).send();
@@ -84,7 +79,7 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
 router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Admin role
-        validRole(req.authInfo['oid'], [2]).then(async () => {
+        validRole(req.authInfo['oid'], [2]).then(() => {
             query(
                 `SELECT users.b2cObjectID AS id, roleID, roles.title AS roleTitle, supplierID, suppliers.name AS supplierName FROM users
                 LEFT JOIN roles ON users.roleID = roles.ID
@@ -94,8 +89,6 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
                     if (results){
                         // Retrieve users from database
                         const databaseUsers = results;
-
-
 
                         // Get access token
                         const response = await axios.post(
@@ -115,8 +108,6 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
                         );
                         const azureUsers = secondResponse.data.value;
                         
-
-
                         // Make array of unique id's, combining the two sets of users
                         const uniqueIDs = [...new Set(databaseUsers.map(item => item.id).concat(azureUsers.map(item => item.id)))]
 
@@ -153,7 +144,7 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
 router.get('/getRoles', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Admin role
-        validRole(req.authInfo['oid'], [2]).then(async () => {
+        validRole(req.authInfo['oid'], [2]).then(() => {
             query(
                 `SELECT * FROM roles;`,
                 [],
@@ -175,7 +166,7 @@ router.get('/getRoles', passport.authenticate('oauth-bearer', { session: false }
 router.get('/getSuppliers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Admin role
-        validRole(req.authInfo['oid'], [2]).then(async () => {
+        validRole(req.authInfo['oid'], [2]).then(() => {
             query(
                 `SELECT suppliers.ID, suppliers.name FROM suppliers;`,
                 [],
@@ -187,6 +178,95 @@ router.get('/getSuppliers', passport.authenticate('oauth-bearer', { session: fal
                     }
                 }
             );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
+// Update role and supplier of a user
+router.post('/updateUser', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin role
+        validRole(req.authInfo['oid'], [2]).then(() => {
+            // Check if all given values are ok
+            const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+            const idOk = req.body.id && regex.test(req.body.id);
+            const roleOk = req.body.role === null || typeof req.body.role === 'number';
+            const supplierOk = req.body.supplier === null || typeof req.body.supplier === 'number';
+            // If not, send code bad request
+            if (!idOk || !roleOk || !supplierOk) {
+                res.status(400).send();
+            } else {
+                // If the user is not a supplier anymore, break the link to a supplier
+                if (req.body.role != 3) {
+                    req.body.supplier = null;
+                }
+
+                // Update the user
+                query(
+                    `UPDATE users SET roleID = ?, supplierID = ?
+                    WHERE b2cObjectID = ?;`,
+                    [req.body.role, req.body.supplier, req.body.id],
+                    ((results, fields) => {
+                        if (results.affectedRows == 1) {
+                            res.status(200).send();
+                        } else {
+                            res.status(500).send();
+                        }
+                    })
+                );
+            }
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
+// Delete user
+router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin role
+        validRole(req.authInfo['oid'], [2]).then(async () => {
+            // Check given b2c object id
+            const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+            // If not, send code bad request
+            if (!req.body.id || !regex.test(req.body.id)) {
+                res.status(400).send();
+            } else {
+                console.log("deleteUser: got through passport, validRole and regex checks");
+
+                // Get access token
+                const response = await axios.post(
+                    `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`,
+                    new url.URLSearchParams({
+                        grant_type: "client_credentials",
+                        client_id: process.env.CLIENT_ID,
+                        client_secret: process.env.CLIENT_SECRET,
+                        scope: "https://graph.microsoft.com/.default"
+                    }).toString()
+                );
+
+                // Delete user in Azure
+                await axios.delete(
+                    `https://graph.microsoft.com/v1.0/users/${req.body.id}`,
+                    { headers: { 'Authorization': `Bearer ${response.data.access_token}`} }
+                ).catch(() => {
+                    console.log("User deletion failed, user was probably already deleted (Azure)");
+                });
+
+                // Delete user in database
+                query(
+                    `DELETE FROM users WHERE users.b2cObjectID = ?;`,
+                    [req.body.id],
+                    ((results, fields) => {
+                        if (results.affectedRows == 0) {
+                            console.log("User deletion failed, user was probably already deleted (Database)");
+                        }
+                        res.status(200).send();
+                    })
+                );
+            }
         }).catch(() => {
             res.status(401).send();
         });
