@@ -1,12 +1,5 @@
 <template>
-    {{ user.id }}
     {{ user.displayName }}
-    {{ user.roleID }}
-    {{ user.roleTitle }}
-    {{ user.supplierID }}
-    {{ user.supplierName }}
-    {{ user.isInAzure }}
-    {{ user.isInDatabase }}
     <select v-model="selectedRole">
         <option v-for="role in roles" :key="role.ID" :value="role.ID">
             {{ role.title }}
@@ -17,6 +10,8 @@
             {{ supplier.name }}
         </option>
     </select>
+    {{ user.isInAzure }}
+    {{ user.isInDatabase }}
     <button @click="saveChanges(user.id)">Log ID (save changes)</button>
     <button @click="deleteUser(user.id)">Log ID (delete user)</button>
 </template>
