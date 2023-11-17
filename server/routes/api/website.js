@@ -37,7 +37,7 @@ function validRole(b2cObjectID, allowedRoles) {
     });
 }
 
-// Get the role of a user
+// Get the role of a user, if the user does not exist, create it
 router.get('/getRole', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         query(
@@ -46,10 +46,35 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
         WHERE users.b2cObjectID = ?;`,
         [req.authInfo['oid']],
         (results, fields) => {
-            if (results){
-                res.status(200).send(results);
+            console.log("role results: ", results)
+            // If present, send corresponding role
+            if (results[0]){
+                res.status(200).send(results[0]);
+            // Otherwise, check object id and add user to database
             } else{
-                res.status(500).send();
+                const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+                if (regex.test(req.authInfo['oid'])) {
+                  console.log("Valid GUID");
+                  query(
+                    `INSERT INTO users (b2cObjectID, roleID)
+                    VALUES (?, 1);`,
+                    [req.authInfo['oid']],
+                    (results, fields) => {
+                        console.log("after created: ", results);
+                        console.log("test", results.affectedRows);
+                        if (results.affectedRows = 1) {
+                            res.status(200).json({ID: 1, title: 'Guest'});
+                        } else {
+                            res.status(500).send();
+                        }
+                        
+                    }
+                  )
+                } else {
+                  console.log("Not a valid GUID");
+                  res.status(401).send()
+                }
+                // res.status(500).send();
             }
         });
     }

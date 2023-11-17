@@ -127,8 +127,8 @@ function setCredentials(accessToken) {
   axios.get("http://localhost:5000/api/website/getRole", {
     headers: { 'Authorization': `Bearer ${accessToken}`}
   }).then((response) => {
-    store.roleId.value = response.data[0].ID;
-    store.roleTitle.value = response.data[0].title;
+    store.roleId.value = response.data.ID;
+    store.roleTitle.value = response.data.title;
   }).catch((error) => {
     console.log("Could not get role:", error);
   });
