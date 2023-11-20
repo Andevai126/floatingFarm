@@ -3,15 +3,16 @@ import { b2cScopes, b2cPolicies, setAccount, authenticateAccount, clearCredentia
 const axios = require('axios');
 
 export function signIn() {
-  (store.msalInstance).loginPopup({
-    scopes: b2cScopes
+  (store.msalInstance).loginRedirect({
+    scopes: b2cScopes,
+    onRedirectNavigate: () => {location.reload();}
   }).then(setAccount).then(authenticateAccount).catch(() => {
     console.error("User cancelled login flow");
   });
 }
 
 export function signOut() {
-  (store.msalInstance).logoutPopup({
+  (store.msalInstance).logoutRedirect({
     account: (store.msalInstance).getAccountByHomeId(store.accountId)
   }).then(() => {
     store.authenticated.value = false;
@@ -21,7 +22,7 @@ export function signOut() {
 }
 
 export function editProfile() {
-  (store.msalInstance).loginPopup({
+  (store.msalInstance).loginRedirect({
     authority: b2cPolicies.authorities.editProfile.authority
   }).then(setAccount).then(() => {
     store.authenticated.value = true;
@@ -60,12 +61,12 @@ function simplePostApi(endpoint, accessToken, body) {
 export async function getUsers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
-    simpleGetApi("http://localhost:5000/api/website/getUsers", store.accessToken).then((users) => {
+    simpleGetApi("https://webappzelf.azurewebsites.net/api/website/getUsers", store.accessToken).then((users) => {
       resolve(users);
     // Try with acquired access token
     }).catch(async () => {
       await getTokenPopup();
-      simpleGetApi("http://localhost:5000/api/website/getUsers", store.accessToken).then((users) => {
+      simpleGetApi("https://webappzelf.azurewebsites.net/api/website/getUsers", store.accessToken).then((users) => {
         resolve(users);
       }).catch(() => {
         reject();
@@ -77,12 +78,12 @@ export async function getUsers() {
 export async function getRoles() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
-    simpleGetApi("http://localhost:5000/api/website/getRoles", store.accessToken).then((roles) => {
+    simpleGetApi("https://webappzelf.azurewebsites.net/api/website/getRoles", store.accessToken).then((roles) => {
       resolve(roles);
     // Try with acquired access token
     }).catch(async () => {
       await getTokenPopup();
-      simpleGetApi("http://localhost:5000/api/website/getRoles", store.accessToken).then((roles) => {
+      simpleGetApi("https://webappzelf.azurewebsites.net/api/website/getRoles", store.accessToken).then((roles) => {
         resolve(roles);
       }).catch(() => {
         reject();
@@ -94,12 +95,12 @@ export async function getRoles() {
 export async function getSuppliers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
-    simpleGetApi("http://localhost:5000/api/website/getSuppliers", store.accessToken).then((suppliers) => {
+    simpleGetApi("https://webappzelf.azurewebsites.net/api/website/getSuppliers", store.accessToken).then((suppliers) => {
       resolve(suppliers);
     // Try with acquired access token
     }).catch(async () => {
       await getTokenPopup();
-      simpleGetApi("http://localhost:5000/api/website/getSuppliers", store.accessToken).then((suppliers) => {
+      simpleGetApi("https://webappzelf.azurewebsites.net/api/website/getSuppliers", store.accessToken).then((suppliers) => {
         resolve(suppliers);
       }).catch(() => {
         reject();
@@ -110,11 +111,11 @@ export async function getSuppliers() {
 
 export async function updateUser(id, role, supplier) {
   // Try with stored access token
-  simplePostApi("http://localhost:5000/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
+  simplePostApi("https://webappzelf.azurewebsites.net/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
   // Try with acquired access token
   .catch(async () => {
     await getTokenPopup();
-    simplePostApi("http://localhost:5000/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
+    simplePostApi("https://webappzelf.azurewebsites.net/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
     .catch((error) => {
       console.log("Failed to update user: ", error);
     });
@@ -123,11 +124,11 @@ export async function updateUser(id, role, supplier) {
 
 export function deleteUser(id) {
   // Try with stored access token
-  simplePostApi("http://localhost:5000/api/website/deleteUser", store.accessToken, {id: id})
+  simplePostApi("https://webappzelf.azurewebsites.net/api/website/deleteUser", store.accessToken, {id: id})
   // Try with acquired access token
   .catch(async () => {
     await getTokenPopup();
-    simplePostApi("http://localhost:5000/api/website/deleteUser", store.accessToken, {id: id})
+    simplePostApi("https://webappzelf.azurewebsites.net/api/website/deleteUser", store.accessToken, {id: id})
     .catch((error) => {
       console.error("Failed to delete user: ", error);
     });

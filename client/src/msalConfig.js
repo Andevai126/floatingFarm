@@ -66,6 +66,14 @@ export function initializeMsal() {
 
   // Configure msal
   store.msalInstance.initialize().then(() => {
+
+    store.msalInstance.addEventCallback((message) => {
+      if (message.eventType === msal.EventType.LOGIN_SUCCESS) {
+        console.log(message.payload);
+        location.reload();
+       }
+    });
+
     store.msalInstance.handleRedirectPromise().then(setAccount).then(authenticateAccount());
   }).catch((error) => {
     console.log("Initialization of msal failed:", error);
@@ -124,7 +132,7 @@ function setCredentials(accessToken) {
   store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.name;
 
   // Set role
-  axios.get("http://localhost:5000/api/website/getRole", {
+  axios.get("https://webappzelf.azurewebsites.net/api/website/getRole", {
     headers: { 'Authorization': `Bearer ${accessToken}`}
   }).then((response) => {
     store.roleId.value = response.data.ID;
