@@ -4,3 +4,8 @@
 /client/environment.js
 /DigiCertGlobalRootCA.crt.pem
 /notes.txt
+/server/public/css
+/server/public/img
+/server/public/js
+/server/public/favicon.ico
+/server/public/index.html
