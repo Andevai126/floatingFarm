@@ -69,7 +69,6 @@ export function initializeMsal() {
 
     store.msalInstance.addEventCallback((message) => {
       if (message.eventType === msal.EventType.LOGIN_SUCCESS) {
-        console.log(message.payload);
         location.reload();
        }
     });
@@ -132,7 +131,7 @@ function setCredentials(accessToken) {
   store.username.value = (store.msalInstance).getAccountByHomeId(store.accountId).idTokenClaims.name;
 
   // Set role
-  axios.get("https://webappzelf.azurewebsites.net/api/website/getRole", {
+  axios.get(env.apiBase + "/api/website/getRole", {
     headers: { 'Authorization': `Bearer ${accessToken}`}
   }).then((response) => {
     store.roleId.value = response.data.ID;
