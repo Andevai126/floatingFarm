@@ -3,7 +3,7 @@
 
     <div style="display: inline-block;">
       <p style="float: left;">Gras</p>
-      <input type="number" v-model="kilosGrass" style="float: left;">
+      <input type="number" v-model="kilosGras" style="float: left;">
       <p style="float: left">kilo's</p>
     </div>
 
@@ -27,13 +27,50 @@
     
     <div style="display: inline-block;">
       <p style="float: left;">Sinaasappelschillen</p>
-      <input type="number" v-model="kilosOrangePeels" style="float: left;">
+      <input type="number" v-model="kilosSinaasappelschillen" style="float: left;">
       <p style="float: left">kilo's</p>
     </div>
 
     <br>
 
-    <button @click="logData()">this is a button!</button>
+    <div v-for="(product, index) in productsInMix" :key="index">
+      <div style="width: 500px; margin-left: auto; margin-right: auto; border: black solid 2px">
+
+        <div style="display: inline-block; float: center">
+          <p style="float: left;">Product</p>
+          <input type="text" v-model="product.name" placeholder="Enter data" style="float: left;">
+        </div>
+
+        <br>
+        
+        <div style="display: inline-block; float: center">
+          <p style="float: left;">Hoeveelheid</p>
+          <input type="number" v-model="product.quantity" style="float: left;">
+          <p style="float: left;">kilo</p>
+        </div>
+
+      </div>
+      <br>
+    </div>
+
+    <br>
+
+    <button @click="addProduct">Voeg product toe...</button>
+
+    <br>
+
+    <div style="display: inline-block;">
+      <input type="date" v-model="date" style="float: left">
+      <input type="time" v-model="time" style="float: left">
+    </div>
+
+    <br>
+
+    <input type="text" placeholder="Notes..." v-model="notes" style="height: 100px;">
+
+    <br>
+
+    <button @click="saveMix()">Sla mix op!</button>
     <br>
     <img alt="Farmer design" src="./../assets/Farmer.png">
   </template>
@@ -42,16 +79,29 @@
   export default {
     name: 'FarmerCard',
     methods: {
-      logData() {
-        console.log("all data: ", this.kilosGrass, this.kilosBierbostel, this.kilosDDGSProticorn, this.kilosOrangePeels);
+      addProduct() {
+        this.productsInMix.push({ name: '', quantity: 0});
+      },
+      saveMix() {
+        console.log("all data: ", this.kilosGras, this.kilosBierbostel, this.kilosDDGSProticorn, this.kilosSinaasappelschillen);
+        this.productsInMix.forEach((product, index) => {
+          console.log(`Input ${index + 1}: ${product.name}, ${product.quantity}`);
+        });
+        console.log(this.date, this.time, this.notes);
+
+        //reset variables
       }
     },
     data() {
       return {
-        kilosGrass: 600,
+        kilosGras: 600,
         kilosBierbostel: 500,
         kilosDDGSProticorn: 300,
-        kilosOrangePeels: 0
+        kilosSinaasappelschillen: 0,
+        productsInMix: [],
+        date: null,
+        time: null,
+        notes: ''
       }
     }
   }
