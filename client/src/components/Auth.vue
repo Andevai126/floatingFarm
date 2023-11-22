@@ -1,5 +1,4 @@
 <template>
-    <h1>auth stuff</h1>
     <button v-if="!authenticated" v-on:click="signIn">Sign in</button>
     <button v-if="authenticated"  v-on:click="signOut">Sign out</button>
     <button v-if="authenticated"  v-on:click="editProfile">Edit profile</button>

@@ -1,7 +1,12 @@
 <template>
-    <img alt="Vue logo" src="./../assets/logo.png">
-    <p>This is the NavBar component! Welcome {{ username }} ({{ roleTitle }})</p>
-    <Auth />
+  <div style="height: 200px; border: black solid 2px">
+    <img alt="Vue logo" src="./../assets/logoWhiteOnBlack.jpg" style="float: left; height: 150px;">
+    <div style="float: right; display: inline-block;">
+      <p style="float: left;">{{ username }} ({{ roleTitle }})</p>
+      <Auth />
+    </div>
+    <br>
+  </div>
 </template>
 
 <script>
