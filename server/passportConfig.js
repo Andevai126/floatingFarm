@@ -7,7 +7,7 @@ module.exports = {
         "policyName": process.env.POLICY_NAME
     },
     "resource": {
-        "scope": ["FullReadWriteAccess"]
+        "scope": [process.env.SCOPE]
     },
     "metadata": {
         "authority": "login.microsoftonline.com",
