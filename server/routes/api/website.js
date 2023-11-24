@@ -21,19 +21,25 @@ function query(query, values, callback) {
 // Helper function to safely verify the role of the user
 function validRole(b2cObjectID, allowedRoles) {
     return new Promise((resolve, reject) => {
-        query(
-            `SELECT roles.ID, roles.title FROM users
-            LEFT JOIN roles ON users.roleID = roles.ID
-            WHERE users.b2cObjectID = ?;`,
-            [b2cObjectID],
-            (results, fields) => {
-                if (results && allowedRoles.includes(results[0].ID)){
-                    resolve();
-                } else {
-                    reject();
+        const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+        const idOk = regex.test(b2cObjectID);
+        if (!idOk) {
+            reject();
+        } else {
+            query(
+                `SELECT roles.ID, roles.title FROM users
+                LEFT JOIN roles ON users.roleID = roles.ID
+                WHERE users.b2cObjectID = ?;`,
+                [b2cObjectID],
+                (results, fields) => {
+                    if (results && allowedRoles.includes(results[0].ID)){
+                        resolve();
+                    } else {
+                        reject();
+                    }
                 }
-            }
-        );
+            );
+        }
     });
 }
 
@@ -191,9 +197,9 @@ router.post('/updateUser', passport.authenticate('oauth-bearer', { session: fals
         validRole(req.authInfo['oid'], [2]).then(() => {
             // Check if all given values are ok
             const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-            const idOk = req.body.id && regex.test(req.body.id);
-            const roleOk = req.body.role === null || typeof req.body.role === 'number';
-            const supplierOk = req.body.supplier === null || typeof req.body.supplier === 'number';
+            const idOk = req.body.hasOwnProperty('id') && regex.test(req.body.id);
+            const roleOk = req.body.hasOwnProperty('role') && (req.body.role === null || typeof req.body.role === 'number');
+            const supplierOk = req.body.hasOwnProperty('supplier') && (req.body.supplier === null || typeof req.body.supplier === 'number');
             // If not, send code bad request
             if (!idOk || !roleOk || !supplierOk) {
                 res.status(400).send();
@@ -234,8 +240,6 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
             if (!req.body.id || !regex.test(req.body.id)) {
                 res.status(400).send();
             } else {
-                console.log("deleteUser: got through passport, validRole and regex checks");
-
                 // Get access token
                 const response = await axios.post(
                     `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`,
@@ -264,6 +268,47 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
                             console.log("User deletion failed, user was probably already deleted (Database)");
                         }
                         res.status(200).send();
+                    })
+                );
+            }
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
+// Add mix with products in mix
+router.post('/addMix', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Farmer role
+        validRole(req.authInfo['oid'], [5]).then(() => {
+            // Check if all given values are ok
+            const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+            const dateTimeOk = req.body.hasOwnProperty('dateTime') && regex.test(req.body.dateTime);
+            const notesOk = req.body.hasOwnProperty('notes') && (req.body.notes.length < 256 || req.body.notes === null);
+            // If not, send code bad request
+            if (!dateTimeOk || !notesOk) {
+                res.status(400).send();
+            } else {
+                // Check if notes is empty or contains only spaces
+                const emptyNotesRegex = /^$|^\s+$/;
+                notesEmpty = emptyNotesRegex.test(req.body.notes);
+                if (notesEmpty) {
+                    req.body.notes = null;
+                }
+
+                // Add a mix
+                query(
+                    `INSERT INTO mixes (dateTime, notes)
+                    VALUES (?, ?);`,
+                    [req.body.dateTime, req.body.notes],
+                    ((results, fields) => {
+                        if (results.affectedRows == 1) {
+                            console.log("respective id: ", results.insertId);
+                            res.status(200).send();
+                        } else {
+                            res.status(500).send();
+                        }
                     })
                 );
             }

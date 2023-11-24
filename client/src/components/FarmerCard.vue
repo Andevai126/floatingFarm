@@ -70,13 +70,14 @@
 
   <br>
 
-  <button @click="saveMix()">Sla mix op ;) !</button>
+  <button @click="addMix()">Sla mix op ;) !</button>
   <br>
   <img alt="Farmer design" src="./../assets/Farmer.png">
 </template>
   
 <script>
   import { ref } from 'vue';
+  import { addMix } from './../apiConfig';
 
   var currentDate = ref('');
   var currentTime = ref('');
@@ -88,7 +89,7 @@
       addProduct() {
         this.ExtraProductsInMix.push({ name: '', quantity: 0});
       },
-      saveMix() {
+      addMix() {
         var productsInMix = [
           {gras: this.kilosGras},
           {bierbostel: this.kilosBierbostel},
@@ -101,7 +102,9 @@
         });
 
         console.log(productsInMix);
-        console.log(this.date, this.time, this.notes);
+        console.log(this.date + " " + this.time, this.notes);
+
+        addMix(productsInMix, this.date + " " + this.time, this.notes);
         
         //reset variables
       }

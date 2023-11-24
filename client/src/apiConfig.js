@@ -135,3 +135,16 @@ export function deleteUser(id) {
     });
   });
 }
+
+export function addMix(productsInMix, dateTime, notes) {
+  // Try with stored access token
+  simplePostApi(env.apiBase + "/api/website/addMix", store.accessToken, {productsInMix: productsInMix, dateTime: dateTime, notes: notes})
+  // Try with acquired access token
+  .catch(async () => {
+    await getTokenPopup();
+    simplePostApi(env.apiBase + "/api/website/addMix", store.accessToken, {productsInMix: productsInMix, dateTime: dateTime, notes: notes})
+    .catch((error) => {
+      console.error("Failed to add mix: ", error);
+    });
+  });
+}
