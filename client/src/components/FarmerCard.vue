@@ -66,7 +66,7 @@
 
   <br>
 
-  <input type="text" placeholder="Notes..." v-model="notes" style="height: 100px;">
+  <textarea placeholder="Notes... (max 256 chars)" maxlength="256" v-model="notes" style="height: 100px;"></textarea>
 
   <br>
 
