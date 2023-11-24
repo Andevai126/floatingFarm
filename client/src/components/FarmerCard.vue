@@ -94,8 +94,8 @@
           productsInMix.push({[product.name]: product.quantity});
         });
 
-        console.log(this.date, this.time, this.notes);
         console.log(productsInMix);
+        console.log(this.date, this.time, this.notes);
         
         //reset variables
       }
