@@ -33,7 +33,7 @@
 
     <br>
 
-    <div v-for="(product, index) in productsInMix" :key="index">
+    <div v-for="(product, index) in ExtraProductsInMix" :key="index">
       <div style="width: 500px; margin-left: auto; margin-right: auto; border: black solid 2px">
 
         <div style="display: inline-block; float: center">
@@ -70,7 +70,7 @@
 
     <br>
 
-    <button @click="saveMix()">Sla mix op!</button>
+    <button @click="saveMix()">Sla mix op ;) !</button>
     <br>
     <img alt="Farmer design" src="./../assets/Farmer.png">
   </template>
@@ -80,15 +80,23 @@
     name: 'FarmerCard',
     methods: {
       addProduct() {
-        this.productsInMix.push({ name: '', quantity: 0});
+        this.ExtraProductsInMix.push({ name: '', quantity: 0});
       },
       saveMix() {
-        console.log("all data: ", this.kilosGras, this.kilosBierbostel, this.kilosDDGSProticorn, this.kilosSinaasappelschillen);
-        this.productsInMix.forEach((product, index) => {
-          console.log(`Input ${index + 1}: ${product.name}, ${product.quantity}`);
-        });
-        console.log(this.date, this.time, this.notes);
+        var productsInMix = [
+          {gras: this.kilosGras},
+          {bierbostel: this.kilosBierbostel},
+          {DDGSProticorn: this.kilosDDGSProticorn},
+          {sinaasappelschillen: this.kilosSinaasappelschillen}
+        ]
 
+        this.ExtraProductsInMix.forEach((product) => {
+          productsInMix.push({[product.name]: product.quantity});
+        });
+
+        console.log(this.date, this.time, this.notes);
+        console.log(productsInMix);
+        
         //reset variables
       }
     },
@@ -98,7 +106,7 @@
         kilosBierbostel: 500,
         kilosDDGSProticorn: 300,
         kilosSinaasappelschillen: 0,
-        productsInMix: [],
+        ExtraProductsInMix: [],
         date: null,
         time: null,
         notes: ''
