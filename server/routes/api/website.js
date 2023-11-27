@@ -277,6 +277,28 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
     }
 );
 
+// Get a list of products
+router.get('/getProducts', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Farmer role
+        validRole(req.authInfo['oid'], [5]).then(() => {
+            query(
+                `SELECT products.ID, products.name FROM products;`,
+                [],
+                (results, fields) => {
+                    if (results){
+                        res.status(200).send(results);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
 // Add mix with products in mix
 router.post('/addMix', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {

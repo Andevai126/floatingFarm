@@ -69,7 +69,8 @@ export async function getUsers() {
       await getTokenPopup();
       simpleGetApi(env.apiBase + "/api/website/getUsers", store.accessToken).then((users) => {
         resolve(users);
-      }).catch(() => {
+      }).catch((error) => {
+        console.error("Failed to get users: ", error);
         reject();
       })
     });
@@ -86,7 +87,8 @@ export async function getRoles() {
       await getTokenPopup();
       simpleGetApi(env.apiBase + "/api/website/getRoles", store.accessToken).then((roles) => {
         resolve(roles);
-      }).catch(() => {
+      }).catch((error) => {
+        console.error("Failed to get roles: ", error);
         reject();
       })
     });
@@ -103,7 +105,8 @@ export async function getSuppliers() {
       await getTokenPopup();
       simpleGetApi(env.apiBase + "/api/website/getSuppliers", store.accessToken).then((suppliers) => {
         resolve(suppliers);
-      }).catch(() => {
+      }).catch((error) => {
+        console.error("Failed to get suppliers: ", error);
         reject();
       })
     });
@@ -132,6 +135,24 @@ export function deleteUser(id) {
     simplePostApi(env.apiBase + "/api/website/deleteUser", store.accessToken, {id: id})
     .catch((error) => {
       console.error("Failed to delete user: ", error);
+    });
+  });
+}
+
+export function getProducts() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi(env.apiBase + "/api/website/getProducts", store.accessToken).then((products) => {
+      resolve(products);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenPopup();
+      simpleGetApi(env.apiBase + "/api/website/getProducts", store.accessToken).then((products) => {
+        resolve(products);
+      }).catch((error) => {
+        console.error("Failed to get products: ", error);
+        reject();
+      });
     });
   });
 }

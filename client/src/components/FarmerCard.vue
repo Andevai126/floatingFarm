@@ -77,7 +77,9 @@
   
 <script>
   import { ref } from 'vue';
-  import { addMix } from './../apiConfig';
+  import { getProducts, addMix } from './../apiConfig';
+
+  var listOfProducts = ref([]);
 
   var currentDate = ref('');
   var currentTime = ref('');
@@ -110,12 +112,18 @@
       }
     },
     setup() {
+      getProducts().then((products) => {
+        console.log("retrieved products: ", products);
+        listOfProducts.value = products;
+      });
+
       const newDate = new Date();
       currentDate.value = newDate.toISOString().slice(0, 10);
       currentTime.value = newDate.toTimeString().slice(0, 5);
     },
     data() {
       return {
+        products: listOfProducts,
         kilosGras: 600,
         kilosBierbostel: 500,
         kilosDDGSProticorn: 300,
