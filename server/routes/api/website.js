@@ -308,8 +308,22 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
             const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
             const dateTimeOk = req.body.hasOwnProperty('dateTime') && regex.test(req.body.dateTime);
             const notesOk = req.body.hasOwnProperty('notes') && (req.body.notes.length < 256 || req.body.notes === null);
+            var productsInMixOk = true;
+            try {
+                req.body.productsInMix.forEach((product) => {
+                    const registeredOk = typeof product.id === 'number' && product.id >= 0;
+                    const unregisteredOk = typeof product.name === 'string' && product.name !== '';
+                    const kilosOk = typeof product.kilos === 'number' && product.kilos >= 0;
+
+                    if (!(registeredOk || unregisteredOk) || !kilosOk ) {
+                        productsInMixOk = false;
+                    }
+                });
+            } catch (err) {
+                productsInMixOk = false;
+            }
             // If not, send code bad request
-            if (!dateTimeOk || !notesOk) {
+            if (!dateTimeOk || !notesOk || !productsInMixOk) {
                 res.status(400).send();
             } else {
                 // Check if notes is empty or contains only spaces
@@ -327,6 +341,9 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                     ((results, fields) => {
                         if (results.affectedRows == 1) {
                             console.log("respective id: ", results.insertId);
+                            // set '' to null and filter duplicates
+                            // set string, create for loop and add to query
+                            // run query
                             res.status(200).send();
                         } else {
                             res.status(500).send();
