@@ -313,17 +313,21 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                 req.body.productsInMix.forEach((product) => {
                     const registeredOk = typeof product.id === 'number' && product.id >= 0;
                     const unregisteredOk = typeof product.name === 'string' && product.name !== '';
+                    const emptyOk = product.id === null && product.name === '';
                     const kilosOk = typeof product.kilos === 'number' && product.kilos >= 0;
 
-                    if (!(registeredOk || unregisteredOk) || !kilosOk ) {
+                    if (!(registeredOk || unregisteredOk || emptyOk) || !kilosOk ) {
+                        console.log("addMix failed: ", registeredOk, unregisteredOk, emptyOk, kilosOk);
                         productsInMixOk = false;
                     }
                 });
-            } catch (err) {
+            } catch (error) {
+                console.log("addMix failed: ", error);
                 productsInMixOk = false;
             }
             // If not, send code bad request
             if (!dateTimeOk || !notesOk || !productsInMixOk) {
+                console.log("body: ", req.body);
                 res.status(400).send();
             } else {
                 // Check if notes is empty or contains only spaces
