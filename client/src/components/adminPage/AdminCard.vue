@@ -3,13 +3,13 @@
     <li v-for="user in users" :key="user">
         <UserInList :user="user" :roles="roles" :suppliers="suppliers"/>
     </li>
-    <img alt="Admin design" src="./../assets/Admin.png">
+    <img alt="Admin design" src="./../../assets/Admin.png">
 </template>
 
 <script>
     import { ref } from 'vue';
     import UserInList from './UserInList.vue'
-    import { getUsers, getRoles, getSuppliers } from './../apiConfig';
+    import { getUsers, getRoles, getSuppliers } from './../../apiConfig';
     
     var listOfUsers = ref([]);
     var listOfRoles = ref([]);

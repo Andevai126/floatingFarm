@@ -72,12 +72,12 @@
 
   <button @click="addMix()">Sla mix op ;) !</button>
   <br>
-  <img alt="Farmer design" src="./../assets/Farmer.png">
+  <img alt="Farmer design" src="./../../assets/Farmer.png">
 </template>
   
 <script>
   import { ref } from 'vue';
-  import { getProducts, addMix } from './../apiConfig';
+  import { getProducts, addMix } from './../../apiConfig';
 
   var listOfProducts = ref([]);
 

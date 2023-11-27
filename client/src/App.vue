@@ -30,10 +30,10 @@ import { store } from './store';
 import NavBar from './components/NavBar.vue'
 import WelcomeCard from './components/WelcomeCard.vue'
 import GuestCard from './components/GuestCard.vue'
-import AdminCard from './components/AdminCard.vue'
+import AdminCard from './components/adminPage/AdminCard.vue'
 import SupplierCard from './components/SupplierCard.vue';
 import UnpackerCard from './components/UnpackerCard.vue';
-import FarmerCard from './components/FarmerCard.vue';
+import FarmerCard from './components/farmerPage/FarmerCard.vue';
 
 export default {
   name: 'App',
