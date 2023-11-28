@@ -344,10 +344,63 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                     [req.body.dateTime, req.body.notes],
                     ((results, fields) => {
                         if (results.affectedRows == 1) {
-                            console.log("respective id: ", results.insertId);
-                            // set '' to null and filter duplicates
-                            // set string, create for loop and add to query
-                            // run query
+                            const mixID = results.insertId;
+                            var productsFound = [];
+                            var registeredProductsQuery = "INSERT INTO productsinmix (mixID, productID, kilos) VALUES ";
+                            var registeredProducts = [];
+                            var unregisteredProductsQuery = "INSERT INTO productsinmix (mixID, unregisteredProductName, kilos) VALUES ";
+                            var unregisteredProducts = [];
+
+                            // Sort and ignore empty, duplicate or weightless products
+                            req.body.productsInMix.forEach((product) => {
+                                if (!(product.id === null && product.name === '') && !productsFound.includes(product.id) && !productsFound.includes(product.name) && product.kilos != 0) {
+                                    if (product.id !== null) {
+                                        registeredProducts.push(mixID, product.id, product.kilos);
+                                        productsFound.push(product.id);
+                                    } else {
+                                        unregisteredProducts.push(mixID, product.name, product.kilos);
+                                        productsFound.push(product.name);
+                                    }
+                                }
+                            });
+
+                            // If present, add registered products to database
+                            if (registeredProducts.length != 0) {
+                                for (var i = 0; i < registeredProducts.length/3-1; i++) {
+                                    registeredProductsQuery += '(?, ?, ?), ';
+                                }
+                                registeredProductsQuery += '(?, ?, ?);';
+
+                                query(
+                                    registeredProductsQuery,
+                                    registeredProducts,
+                                    (results, fields) => {
+                                        console.log("registered products finished");
+                                    }
+                                );
+                            }
+
+                            // If present, add unregistered products to database
+                            if (unregisteredProducts.length != 0) {
+                                for (var i = 0; i < unregisteredProducts.length/3-1; i++) {
+                                    unregisteredProductsQuery += '(?, ?, ?), ';
+                                }
+                                unregisteredProductsQuery += '(?, ?, ?);';
+
+                                query(
+                                    unregisteredProductsQuery,
+                                    unregisteredProducts,
+                                    (results, fields) => {
+                                        console.log("unregistered products finished");
+                                    }
+                                );
+                            }
+                            
+                            // console.log(mixID);
+                            // console.log(registeredProductsQuery);
+                            // console.log(registeredProducts);
+                            // console.log(unregisteredProductsQuery);
+                            // console.log(unregisteredProducts);
                             res.status(200).send();
                         } else {
                             res.status(500).send();
