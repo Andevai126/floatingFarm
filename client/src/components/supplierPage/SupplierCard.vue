@@ -1,6 +1,6 @@
 <template>
     <p>This is the SupplierCard component</p>
-    <img alt="Supplier design" src="./../assets/Supplier.png">
+    <img alt="Supplier design" src="./../../assets/Supplier.png">
   </template>
   
   <script>
