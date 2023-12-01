@@ -29,7 +29,7 @@
 
 <script>
     export default {
-        name: 'ExtraProductInList',
+        name: 'ExtraProductInFarmer',
         emits: ['updateExtraProductEvent'],
         methods: {
             nameChanged() {
