@@ -3,13 +3,13 @@
 
         <div style="display: inline-block; float: center">
             <p style="float: left;">Product</p>
-            <input type="text" v-model="name" @input="updateExtraProduct" placeholder="Enter data" style="float: left;">
+            <input type="text" v-model="name" @input="nameChanged" placeholder="Enter data" style="float: left;">
         </div>
 
         <br>
 
         <div v-if="suggestions.length > 0">
-            <div v-for="suggestion in suggestions" :key="suggestion.id" @click="selectSuggestion(suggestion)">
+            <div v-for="suggestion in suggestions" :key="suggestion.id" @click="suggestionSelected(suggestion)">
                 {{ suggestion.name }} <br>
             </div>
         </div>
@@ -18,7 +18,7 @@
 
         <div style="display: inline-block; float: center">
             <p style="float: left;">Hoeveelheid</p>
-            <input type="number" v-model="kilos" @input="updateExtraProduct" style="float: left;">
+            <input type="number" v-model="kilos" @input="kilosChanged" style="float: left;">
             <p style="float: left;">kilo</p>
         </div>
 
@@ -32,31 +32,47 @@
         name: 'ExtraProductInList',
         emits: ['updateExtraProductEvent'],
         methods: {
-            selectSuggestion(suggestion) {
+            nameChanged() {
+                const inputName = this.name.toLowerCase();
+
+                // Update suggestions
+                this.suggestions = (inputName == '') ? [] : this.products.filter(product => {
+                    const productName = product.name.toLowerCase();
+                    var currentIndex = 0;
+
+                    for (const char of inputName) {
+                        const charIndex = productName.indexOf(char, currentIndex);
+                        // Character not found or not in the correct order
+                        if (charIndex === -1) {
+                        return false;
+                        }
+                        // Move the current index for the next iteration
+                        currentIndex = charIndex + 1;
+                    }
+                    // All characters found in the correct order
+                    return true;
+                });
+
+                // Silently check if last remaining suggestion matches
+                if (this.suggestions.length == 1 && this.suggestions[0].name.toLowerCase() == inputName) {
+                    this.suggestionSelected(this.suggestions[0]);
+                } else {
+                    this.id = null;
+                    this.updateExtraProduct();
+                }
+            },
+            suggestionSelected(suggestion) {
                 this.name = suggestion.name;
                 this.id = suggestion.ID;
                 this.suggestions = [];
                 this.updateExtraProduct();
             },
+            kilosChanged() {
+                this.updateExtraProduct();
+            },
             updateExtraProduct() {
-                const inputName = this.name.toLowerCase();
-                this.suggestions = this.products.filter(product => product.name.toLowerCase().startsWith(inputName));
-                if (inputName == '') {
-                    this.suggestions = [];
-                }
-                if (this.suggestions.length == 1 && this.suggestions[0].name.toLowerCase() == inputName.toLowerCase()) {
-                    this.name = this.suggestions[0].name;
-                    this.id = this.suggestions[0].ID;
-                    this.suggestions = [];
-                } else {
-                    this.id = null;
-                }
-
-                if (typeof this.kilos !== 'number') {
-                    this.$emit('updateExtraProductEvent', {index: this.index, id: this.id, name: this.name, kilos: 0});
-                } else {
-                    this.$emit('updateExtraProductEvent', {index: this.index, id: this.id, name: this.name, kilos: this.kilos});
-                }
+                const kilos = (typeof this.kilos === 'number') ? this.kilos : 0;
+                this.$emit('updateExtraProductEvent', {index: this.index, id: this.id, name: this.name, kilos: kilos});
             }
         },
         props: {
