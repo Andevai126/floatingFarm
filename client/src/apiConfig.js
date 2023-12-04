@@ -169,3 +169,34 @@ export function addMix(productsInMix, dateTime, notes) {
     });
   });
 }
+
+export function getContainers() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi(env.apiBase + "/api/website/getContainers", store.accessToken).then((containers) => {
+      resolve(containers);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenPopup();
+      simpleGetApi(env.apiBase + "/api/website/getContainers", store.accessToken).then((containers) => {
+        resolve(containers);
+      }).catch((error) => {
+        console.error("Failed to get containers: ", error);
+        reject();
+      });
+    });
+  });
+}
+
+export function addContribution(productsInContribution, dateTime, isDelivery, notes) {
+  // Try with stored access token
+  simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, notes: notes})
+  // Try with acquired access token
+  .catch(async () => {
+    await getTokenPopup();
+    simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, notes: notes})
+    .catch((error) => {
+      console.error("Failed to add contribution: ", error);
+    });
+  });
+}
