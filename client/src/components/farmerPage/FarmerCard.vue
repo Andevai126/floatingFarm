@@ -1,76 +1,101 @@
 <template>
+  <div class="container rounded border bg-light shadow p-3 mt-5">
+    <h4>Products</h4>
+    <hr>
+
+    <!-- 4 preset products -->
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col">
+          <p>Gras</p>
+          <div class="input-group mb-3">
+            <input type="number" v-model="kilosGras" class="form-control no-spinners">
+            <label class="input-group-text">Kilo's</label>
+          </div>
+        </div>
+        <div class="col">
+          <p >Bierbostel</p>
+          <div class="input-group mb-3">
+            <input type="number" v-model="kilosBierbostel" class="form-control no-spinners">
+            <label class="input-group-text">Kilo's</label>
+          </div>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col">
+          <p>DDGS Proticorn</p>
+          <div class="input-group mb-3">
+            <input type="number" v-model="kilosDDGSProticorn" class="form-control no-spinners">
+            <label class="input-group-text">Kilo's</label>
+          </div>
+        </div>
+        <div class="col">
+          <p>Sinaasappelschillen</p>
+          <div class="input-group mb-3">
+            <input type="number" v-model="kilosSinaasappelschillen" class="form-control no-spinners">
+            <label class="input-group-text">Kilo's</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- extra product inputs -->
+    <div v-for="(extraProduct, index) in extraProductsInMix" :key="index">
+      <ExtraProductInFarmer
+        :products="products"
+        :index="index"
+        @updateExtraProductEvent="handleExtraProduct"
+      />
+      <br />
+    </div>
+
+    <!-- extra products button -->
+    <div class="row justify-content-md-center">
+      <button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
+    </div>
+
+    <h4>Date and Time</h4>
+    <hr>
+
+    <!-- date and time -->
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col">
+          <input type="date" v-model="date" class="form-control" />
+        </div>
+        <div class="col">
+          <input type="time" v-model="time" class="form-control" />
+        </div>
+      </div>
+    </div>
+
+    <h4>Notes</h4>
+    <hr>
+
+    <!-- notes -->
+    <div class="container mb-3">
+      <textarea
+        v-model="notes"
+        class="form-control"
+        maxlength="256"
+        style="height: 100px"
+      ></textarea>
+    </div>
+    
+    <!-- send -->
+    <div class="row justify-content-md-center">
+      <button @click="addMix" class="btn btn-primary text-dark bg-white col col-3">Send</button>
+    </div>
+
+  </div>
+
+  <!-- to be removed -->
+  <hr class="mt-5">
   <p>This is the FarmerCard component</p>
-
-  <div style="display: inline-block">
-    <p style="float: left">Gras</p>
-    <input type="number" v-model="kilosGras" style="float: left" />
-    <p style="float: left">kilo's</p>
-  </div>
-
-  <br />
-
-  <div style="display: inline-block">
-    <p style="float: left">Bierbostel</p>
-    <input type="number" v-model="kilosBierbostel" style="float: left" />
-    <p style="float: left">kilo's</p>
-  </div>
-
-  <br />
-
-  <div style="display: inline-block">
-    <p style="float: left">DDGS Proticorn</p>
-    <input type="number" v-model="kilosDDGSProticorn" style="float: left" />
-    <p style="float: left">kilo's</p>
-  </div>
-
-  <br />
-
-  <div style="display: inline-block">
-    <p style="float: left">Sinaasappelschillen</p>
-    <input
-      type="number"
-      v-model="kilosSinaasappelschillen"
-      style="float: left"
-    />
-    <p style="float: left">kilo's</p>
-  </div>
-
-  <br />
-
-  <div v-for="(extraProduct, index) in extraProductsInMix" :key="index">
-    <ExtraProductInFarmer
-      :products="products"
-      :index="index"
-      @updateExtraProductEvent="handleExtraProduct"
-    />
-    <br />
-  </div>
-
-  <br />
-
-  <button @click="addExtraProduct">Voeg product toe...</button>
-
-  <br />
-
-  <div style="display: inline-block">
-    <input type="date" v-model="date" style="float: left" />
-    <input type="time" v-model="time" style="float: left" />
-  </div>
-
-  <br />
-
-  <textarea
-    placeholder="Notes... (max 256 chars)"
-    maxlength="256"
-    v-model="notes"
-    style="height: 100px"
-  ></textarea>
-
-  <br />
-
-  <button @click="addMix()">Sla mix op ;) !</button>
   <br />
   <img alt="Farmer design" src="./../../assets/Farmer.png" />
+
 </template>
 
 <script>
@@ -144,5 +169,14 @@
   };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+  /* Custom CSS to hide number input arrows */
+  .no-spinners {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .no-spinners::-webkit-inner-spin-button, .no-spinners::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>

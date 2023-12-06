@@ -1,30 +1,27 @@
 <template>
-    <div style="width: 500px; margin-left: auto; margin-right: auto; border: black solid 2px">
+    <div class="row justify-content-md-center">
+        <div class="container rounded border col col-6 pt-3 mb-3">
+            <p>Extra Product</p>
+            <!-- input product name -->
+            <div class="input-group mb-3">
+                <label class="input-group-text">Name</label>
+                <input type="text" v-model="name" @input="nameChanged" class="form-control">
+            </div>
 
-        <div style="display: inline-block; float: center">
-            <p style="float: left;">Product</p>
-            <input type="text" v-model="name" @input="nameChanged" placeholder="Enter data" style="float: left;">
-        </div>
-
-        <br>
-
-        <div v-if="suggestions.length > 0">
-            <div v-for="suggestion in suggestions" :key="suggestion.id" @click="suggestionSelected(suggestion)">
-                {{ suggestion.name }} <br>
+            <!-- input product name suggestions -->
+            <div v-if="suggestions.length > 0">
+                <div v-for="suggestion in suggestions" :key="suggestion.id" @click="suggestionSelected(suggestion)">
+                    {{ suggestion.name }} <br>
+                </div>
+            </div>
+        
+            <!-- input weight -->
+            <div class="input-group mb-3">
+                <input type="number" v-model="kilos" @input="kilosChanged" class="form-control no-spinners">
+                <label class="input-group-text">Kilo's</label>
             </div>
         </div>
-
-        <br>
-
-        <div style="display: inline-block; float: center">
-            <p style="float: left;">Hoeveelheid</p>
-            <input type="number" v-model="kilos" @input="kilosChanged" style="float: left;">
-            <p style="float: left;">kilo</p>
-        </div>
-
     </div>
-
-    <br>
 </template>
 
 <script>
@@ -95,3 +92,15 @@
         }
     };
 </script>
+
+<style scoped>
+  /* Custom CSS to hide number input arrows */
+  .no-spinners {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .no-spinners::-webkit-inner-spin-button, .no-spinners::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>
