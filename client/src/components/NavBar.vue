@@ -1,6 +1,11 @@
 <template>
   <div style="height: 200px; border: black solid 2px">
     <img alt="Vue logo" src="./../assets/logoWhiteOnBlack.jpg" style="float: left; height: 150px;">
+
+    <div style="position: absolute; left: 50%; transform: translate(-50%, 0%);">
+      center div
+    </div>
+
     <div style="float: right; display: inline-block;">
       <p style="float: left;">{{ username }} ({{ roleTitle }})</p>
       <Auth />
