@@ -1,17 +1,20 @@
 <template>
-  <div style="height: 200px; border: black solid 2px">
-    <img alt="Vue logo" src="./../assets/logoWhiteOnBlack.jpg" style="float: left; height: 150px;">
-
-    <div style="position: absolute; left: 50%; transform: translate(-50%, 0%);">
-      center div
+  <nav class="navbar bg-light shadow row p-3">
+    <!-- left side: logo -->
+    <div class="col">
+      <img alt="logo FF black on transparent" src="./../assets/logoBlackOnTransparent.png" style="height: 50px;">
     </div>
-
-    <div style="float: right; display: inline-block;">
-      <p style="float: left;">{{ username }} ({{ roleTitle }})</p>
-      <Auth />
+    <!-- center: possible nav stuff -->
+    <div class="col text-center">
+      Possible | Navigation | Buttons
     </div>
-    <br>
-  </div>
+    <!-- right side: account info, auth -->
+    <div class="col">
+      <div style="float: right;">
+        <Auth />
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
@@ -25,6 +28,7 @@ export default {
   },
   data() {
     return {
+      authenticated: store.authenticated,
       username: store.username,
       roleTitle: store.roleTitle
     };

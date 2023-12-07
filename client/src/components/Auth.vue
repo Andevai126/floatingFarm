@@ -1,7 +1,12 @@
 <template>
-    <button v-if="!authenticated" v-on:click="signIn">Sign in</button>
-    <button v-if="authenticated"  v-on:click="signOut">Sign out</button>
-    <button v-if="authenticated"  v-on:click="editProfile">Edit profile</button>
+    <button v-if="!authenticated" v-on:click="signIn"      class="btn btn-primary text-dark bg-white">Sign in</button>
+    <div v-if="authenticated" class="text-center">
+        {{ username }} ({{ roleTitle }})
+        &nbsp;
+        <button v-on:click="editProfile"                   class="btn btn-primary text-dark bg-white">Edit profile</button>
+        &nbsp;
+        <button v-on:click="signOut"                       class="btn btn-primary text-dark bg-white">Sign out</button>
+    </div>
 </template>
   
 <script>
@@ -12,7 +17,9 @@
         name: 'AuthComponent',
         data() {
             return {
-                authenticated: store.authenticated
+                authenticated: store.authenticated,
+                username: store.username,
+                roleTitle: store.roleTitle
             };
         },
         methods: {

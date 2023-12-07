@@ -1,5 +1,5 @@
 <template>
-  <div class="container rounded border bg-light shadow p-3 mt-5">
+  <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
     <h4>Products</h4>
     <hr>
 
@@ -89,13 +89,6 @@
     </div>
 
   </div>
-
-  <!-- to be removed -->
-  <hr class="mt-5">
-  <p>This is the FarmerCard component</p>
-  <br />
-  <img alt="Farmer design" src="./../../assets/Farmer.png" />
-
 </template>
 
 <script>
