@@ -1,20 +1,22 @@
 <template>
-  <nav class="navbar bg-light shadow row p-3">
-    <!-- left side: logo -->
-    <div class="col">
-      <img alt="logo FF black on transparent" src="./../assets/logoBlackOnTransparent.png" style="height: 50px;">
-    </div>
-    <!-- center: possible nav stuff -->
-    <div class="col text-center">
-      Possible | Navigation | Buttons
-    </div>
-    <!-- right side: account info, auth -->
-    <div class="col">
-      <div style="float: right;">
-        <Auth />
+  <header>
+    <nav class="navbar bg-light shadow row p-3 g-0">
+      <!-- left side: logo -->
+      <div class="col">
+        <img alt="logo FF black on transparent" src="./../assets/logoBlackOnTransparent.png" style="height: 50px;">
       </div>
-    </div>
-  </nav>
+      <!-- center: possible nav stuff -->
+      <div class="col text-center">
+        Possible | Navigation | Buttons
+      </div>
+      <!-- right side: account info, auth -->
+      <div class="col">
+        <div style="float: right;">
+          <Auth />
+        </div>
+      </div>
+    </nav>
+  </header>
 </template>
 
 <script>
