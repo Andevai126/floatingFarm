@@ -1,49 +1,77 @@
 <template>
-  <p>This is the SupplierCard component</p>
+  <div class="row">
+    <!-- left column -->
+    <div class="col">
+      <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+        <h4>Products</h4>
+        <hr>
 
-  <br />
+        <!-- product inputs -->
+        <div v-for="(extraProduct, index) in extraProductsInContribution" :key="index">
+          <ExtraProductInSupplier
+            :products="products"
+            :containers="containers"
+            :index="index"
+            @updateExtraProductEvent="handleExtraProduct"
+          />
+          <br />
+        </div>
 
-  <div v-for="(extraProduct, index) in extraProductsInContribution" :key="index">
-    <ExtraProductInSupplier
-      :products="products"
-      :containers="containers"
-      :index="index"
-      @updateExtraProductEvent="handleExtraProduct"
-    />
-    <br />
+        <!-- products button -->
+        <div class="row justify-content-center mb-3">
+          <button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
+        </div>
+
+        <h4>Logistics of Transport</h4>
+        <hr>
+
+        <!-- date and time -->
+        <div class="container mb-3">
+          <div class="row">
+            <div class="col">
+              <input type="date" v-model="date" class="form-control" />
+            </div>
+            <div class="col">
+              <input type="time" v-model="time" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <!-- is delivery -->
+        <div class="container mb-3">
+          <input type="checkbox" v-model="isDelivery">
+          This contribution will be {{ isDelivery ? 'delivered by you.' : 'collected by Floating Farm.' }}
+        </div>
+
+        <h4>Notes</h4>
+        <hr>
+
+        <!-- notes -->
+        <div class="container mb-3">
+          <textarea
+            v-model="notes"
+            class="form-control"
+            maxlength="256"
+            style="height: 100px"
+          ></textarea>
+        </div>
+
+        <!-- send -->
+        <div class="row justify-content-center">
+          <button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Send</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- right column -->
+    <div class="col">
+      <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+        <img alt="Supplier design" src="./../../assets/SupplierRightSide.png" style="width: 500px;">
+      </div>
+    </div>
+
   </div>
-
-  <br />
-
-  <button @click="addExtraProduct">Voeg product toe...</button>
-
-  <br />
-
-  <div style="display: inline-block">
-    <input type="date" v-model="date" style="float: left" />
-    <input type="time" v-model="time" style="float: left" />
-  </div>
-
-  <br>
-
-  <input type="checkbox" v-model="isDelivery">
-
-  <br />
-
-  <textarea
-    placeholder="Notes... (max 256 chars)"
-    maxlength="256"
-    v-model="notes"
-    style="height: 100px"
-  ></textarea>
-
-  <br />
-
-  <button @click="addContribution">Sla contributie op ;) !</button>
-
-  <br>
-
-  <img alt="Supplier design" src="./../../assets/Supplier.png">
 </template>
   
 <script>
@@ -111,7 +139,7 @@
         extraProductsInContribution: [{ id: null, name: '', quantity: 0, containerId: null, containerName: '' }],
         date: currentDate,
         time: currentTime,
-        isDelivery: false,
+        isDelivery: true,
         notes: ""
       }
     }
