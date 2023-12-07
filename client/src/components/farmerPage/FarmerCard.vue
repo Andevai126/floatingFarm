@@ -51,7 +51,7 @@
     </div>
 
     <!-- extra products button -->
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-center">
       <button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
     </div>
 
@@ -84,7 +84,7 @@
     </div>
     
     <!-- send -->
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-center">
       <button @click="addMix" class="btn btn-primary text-dark bg-white col col-3">Send</button>
     </div>
 
