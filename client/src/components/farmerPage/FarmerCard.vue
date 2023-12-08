@@ -95,17 +95,13 @@
           <div class="container">
             <strong>{{ alert.title }}</strong> &nbsp; {{ alert.message }}
           </div>
-          
-        <!-- <div style="width: 100%;"> -->
           <button @click="hideAlert(index)" type="button" class="btn btn-success text-dark bg-white close" aria-label="Close" style="float: right; margin: 0.75rem">
             <span aria-hidden="true">&times;</span>
           </button>
-        <!-- </div> -->
         </div>
-        
-        
       </div>
     </div>
+
   </div>
 </template>
 
@@ -172,9 +168,9 @@
           });
 
           // Auto hide alert after 4 seconds
-          // setTimeout(() => {
-          //   this.hideAlert(this.alerts.length - 1);
-          // }, 4000);
+          setTimeout(() => {
+            this.hideAlert(this.alerts.length - 1);
+          }, 4000);
         })
         .catch(() => {
           console.log("Failed to add mix");
@@ -182,7 +178,7 @@
           this.alerts.push({
             type: 'alert-danger',
             title: 'Failure!',
-            message: 'Your mix has not been added.',
+            message: 'Your mix has not been added, refresh the page and try again ;)',
           });
         });
 
