@@ -84,10 +84,28 @@
     </div>
     
     <!-- send -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-3">
       <button @click="addMix" class="btn btn-primary text-dark bg-white col col-3">Send</button>
     </div>
 
+    <!-- alerts -->
+    <div class="container mb-3">
+      <div v-for="(alert, index) in alerts" :key="index" class="alert fade show " :class="alert.type" role="alert">
+        <div class="container d-flex align-items-center">
+          <div class="container">
+            <strong>{{ alert.title }}</strong> &nbsp; {{ alert.message }}
+          </div>
+          
+        <!-- <div style="width: 100%;"> -->
+          <button @click="hideAlert(index)" type="button" class="btn btn-success text-dark bg-white close" aria-label="Close" style="float: right; margin: 0.75rem">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        <!-- </div> -->
+        </div>
+        
+        
+      </div>
+    </div>
   </div>
 </template>
 
@@ -132,10 +150,47 @@
         console.log(productsInMix);
         console.log(this.date + " " + this.time, this.notes);
 
-        addMix(productsInMix, this.date + " " + this.time, this.notes);
+        addMix(productsInMix, this.date + " " + this.time, this.notes)
+        .then(() => {
+          console.log("Succeeded to add mix");
+          //reset variables
+          this.kilosGras = 600;
+          this.kilosBierbostel = 500;
+          this.kilosDDGSProticorn = 300;
+          this.kilosSinaasappelschillen = 0;
+          this.extraProductsInMix = [];
+          const newDate = new Date();
+          this.date = newDate.toISOString().slice(0, 10);
+          this.time = newDate.toTimeString().slice(0, 5);
+          this.notes = '';
 
-        //reset variables
+          // Indicate success to user
+          this.alerts.push({
+            type: 'alert-success',
+            title: 'Success!',
+            message: 'Your mix has been added.',
+          });
+
+          // Auto hide alert after 4 seconds
+          // setTimeout(() => {
+          //   this.hideAlert(this.alerts.length - 1);
+          // }, 4000);
+        })
+        .catch(() => {
+          console.log("Failed to add mix");
+          // Indicate failure to user
+          this.alerts.push({
+            type: 'alert-danger',
+            title: 'Failure!',
+            message: 'Your mix has not been added.',
+          });
+        });
+
       },
+      hideAlert(index) {
+        // Remove the alert at the specified index
+        this.alerts.splice(index, 1);
+      }
     },
     setup() {
       getProducts().then((products) => {
@@ -157,6 +212,7 @@
         date: currentDate,
         time: currentTime,
         notes: "",
+        alerts: []
       };
     },
   };
