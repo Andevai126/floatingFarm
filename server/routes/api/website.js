@@ -311,13 +311,13 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
             var productsInMixOk = true;
             try {
                 req.body.productsInMix.forEach((product) => {
-                    const registeredOk = typeof product.id === 'number' && product.id >= 0;
+                    const registeredOk = typeof product.id === 'number' && product.id > 0;
                     const unregisteredOk = typeof product.name === 'string' && product.name !== '';
                     const emptyOk = product.id === null && product.name === '';
                     const kilosOk = typeof product.kilos === 'number' && product.kilos >= 0;
 
-                    if (!(registeredOk || unregisteredOk || emptyOk) || !kilosOk ) {
-                        console.log("addMix failed: ", registeredOk, unregisteredOk, emptyOk, kilosOk);
+                    if (!(emptyOk || ((registeredOk || unregisteredOk) && kilosOk))) {
+                        console.log("addMix failed: ", emptyOk, registeredOk, unregisteredOk, kilosOk);
                         productsInMixOk = false;
                     }
                 });
@@ -449,15 +449,15 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
             var productsInContributionOk = true;
             try {
                 req.body.productsInContribution.forEach((product) => {
-                    const registeredOk = typeof product.id === 'number' && product.id >= 0; //larger than 0
+                    const registeredOk = typeof product.id === 'number' && product.id > 0;
                     const unregisteredOk = typeof product.name === 'string' && product.name !== '';
                     const emptyOk = product.id === null && product.name === '';
                     const quantityOk = typeof product.quantity === 'number' && product.quantity >= 0;
-                    const containerRegisteredOk = typeof product.containerId === 'number' && product.containerId >= 0; //larger than 0
+                    const containerRegisteredOk = typeof product.containerId === 'number' && product.containerId > 0;
                     const containerUnregisteredOk = typeof product.containerName === 'string' && product.containerName !== '';
 
-                    if (!(registeredOk || unregisteredOk || emptyOk) || !quantityOk || !(containerRegisteredOk || containerUnregisteredOk) ) {
-                        console.log("addContribution failed: ", registeredOk, unregisteredOk, emptyOk, quantityOk, containerRegisteredOk, containerUnregisteredOk);
+                    if (!(emptyOk || ( (registeredOk || unregisteredOk) && quantityOk && (containerRegisteredOk || containerUnregisteredOk) )) ) {
+                        console.log("addContribution failed: ", emptyOk, registeredOk, unregisteredOk, quantityOk, containerRegisteredOk, containerUnregisteredOk);
                         productsInContributionOk = false;
                     }
                 });
@@ -481,7 +481,7 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
                     `SELECT users.supplierID FROM users WHERE users.b2cObjectID = ?`,
                     [req.authInfo['oid']],
                     ((results, fields) => {
-                        if (results) {
+                        if (results) { // this is prob not a good check, put try/catch around all query()'s?
                             const supplierId = results[0].supplierID;
                             const newDate = new Date();
                             const currentDate = newDate.toISOString().slice(0, 10);
