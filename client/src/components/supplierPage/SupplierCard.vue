@@ -83,6 +83,8 @@
     <!-- right column -->
     <div class="col">
       <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+        <h4>Stock</h4>
+        <hr>
         <img alt="Supplier design" src="./../../assets/SupplierRightSide.png" style="width: 500px;">
       </div>
     </div>
@@ -131,7 +133,7 @@
         .then(() => {
           console.log("Succeeded to add contribution");
           // Reset variables
-          this.extraProductsInContribution = [{ id: null, name: '', quantity: 0, containerId: null, containerName: '' }];
+          this.extraProductsInContribution = [];
           const newDate = new Date();
           this.date = newDate.toISOString().slice(0, 10);
           this.time = newDate.toTimeString().slice(0, 5);

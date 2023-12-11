@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-md-center">
         <div class="container rounded border col col-6 pt-3 mb-3">
-            <p>Extra Product</p>
+            <p>Product</p>
 
             <!-- input product name -->
             <div class="input-group mb-3">
