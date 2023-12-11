@@ -149,7 +149,7 @@
         addMix(productsInMix, this.date + " " + this.time, this.notes)
         .then(() => {
           console.log("Succeeded to add mix");
-          //reset variables
+          // Reset variables
           this.kilosGras = 600;
           this.kilosBierbostel = 500;
           this.kilosDDGSProticorn = 300;

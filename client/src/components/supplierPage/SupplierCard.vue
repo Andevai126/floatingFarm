@@ -61,6 +61,20 @@
           <button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Send</button>
         </div>
 
+        <!-- alerts -->
+        <div class="container mb-3">
+          <div v-for="(alert, index) in alerts" :key="index" class="alert fade show " :class="alert.type" role="alert">
+            <div class="container d-flex align-items-center">
+              <div class="container">
+                <strong>{{ alert.title }}</strong> &nbsp; {{ alert.message }}
+              </div>
+              <button @click="hideAlert(index)" type="button" class="btn btn-success text-dark bg-white close" aria-label="Close" style="float: right; margin: 0.75rem">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -78,7 +92,6 @@
   import { ref } from 'vue';
   import ExtraProductInSupplier from "./ExtraProductInSupplier.vue";
   import { getProducts, getContainers, addContribution } from "./../../apiConfig";
-  // import { getProducts, getContainers } from "./../../apiConfig";
 
   var listOfProducts = ref([]);
   var listOfContainers = ref([]);
@@ -112,9 +125,43 @@
         console.log(productsInContribution);
         console.log(this.date + " " + this.time, this.isDelivery, this.notes);
         
-        addContribution(productsInContribution, this.date + " " + this.time, this.isDelivery, this.notes);
+        addContribution(productsInContribution, this.date + " " + this.time, this.isDelivery, this.notes)
+        .then(() => {
+          console.log("Succeeded to add contribution");
+          // Reset variables
+          this.extraProductsInContribution = [{ id: null, name: '', quantity: 0, containerId: null, containerName: '' }];
+          const newDate = new Date();
+          this.date = newDate.toISOString().slice(0, 10);
+          this.time = newDate.toTimeString().slice(0, 5);
+          this.isDelivery = true;
+          this.notes = '';
 
-        //reset variables
+          // Indicate success to user
+          this.alerts.push({
+            type: 'alert-success',
+            title: 'Success!',
+            message: 'Your contribution has been added.',
+          });
+
+          // Auto hide alert after 4 seconds
+          setTimeout(() => {
+            this.hideAlert(this.alerts.length - 1);
+          }, 4000);
+        })
+        .catch(() => {
+          console.log("Failed to add contribution");
+          // Indicate failure to user
+          this.alerts.push({
+            type: 'alert-danger',
+            title: 'Failure!',
+            message: 'Your contribution has not been added, refresh the page and try again ;)',
+          });
+        });
+
+      },
+      hideAlert(index) {
+        // Remove the alert at the specified index
+        this.alerts.splice(index, 1);
       }
     },
     setup() {
@@ -140,14 +187,11 @@
         date: currentDate,
         time: currentTime,
         isDelivery: true,
-        notes: ""
+        notes: "",
+        alerts: []
       }
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
   
