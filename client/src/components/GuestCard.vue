@@ -1,15 +1,14 @@
 <template>
-  <p>This is the GuestCard component</p>
-  <img alt="Guest design" src="./../assets/Guest.png">
+  <div class="container rounded border bg-light shadow p-3 mt-5 mb-3 text-center">
+    <h4>Welcome!</h4>
+    <hr>
+    <p>Currently, this account does not yet have any permissions ...</p>
+    <p>Contact the administrator to have a role assigned.</p>
+  </div>
 </template>
 
 <script>
-export default {
-  name: 'GuestCard',
-}
+  export default {
+    name: 'GuestCard',
+  }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
