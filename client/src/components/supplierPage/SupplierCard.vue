@@ -59,7 +59,7 @@
         </div>
 
         <!-- send -->
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-3">
           <button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Send</button>
         </div>
 
