@@ -18,7 +18,7 @@
             <!-- input weight -->
             <div class="input-group mb-3">
                 <input type="number" v-model="kilos" @input="kilosChanged" class="form-control no-spinners">
-                <label class="input-group-text">Kilo's</label>
+                <label class="input-group-text">Kilo</label>
             </div>
         </div>
     </div>

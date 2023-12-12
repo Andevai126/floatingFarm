@@ -1,14 +1,38 @@
 <template>
-    <p>This is the AdminCard component!</p>
-    <li v-for="user in users" :key="user">
-        <UserInList :user="user" :roles="roles" :suppliers="suppliers"/>
-    </li>
+    <!-- users -->
+    <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+        <h4>Users</h4>
+        <hr>
+
+        <table class="table">
+            <thead>
+                <th scope="col">Display name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Assigment to supplier</th>
+                <th scope="col">Present in AD B2C Database</th>
+                <th scope="col">Present in MySQL Database</th>
+                <th scope="col">Save / Update</th>
+                <th scope="col">Delete</th>
+            </thead>
+            <tbody>
+                <tr v-for="user in users" :key="user">
+                    <UserInList :user="user" :roles="roles" :suppliers="suppliers"/>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- stock -->
+    <StockCard />
+
+    <!-- design -->
     <img alt="Admin design" src="./../../assets/Admin.png">
 </template>
 
 <script>
     import { ref } from 'vue';
     import UserInList from './UserInList.vue'
+    import StockCard from './../stockContainer/StockCard.vue';
     import { getUsers, getRoles, getSuppliers } from './../../apiConfig';
     
     var listOfUsers = ref([]);
@@ -18,7 +42,8 @@
     export default {
         name: 'AdminCard',
         components: {
-            UserInList
+            UserInList,
+            StockCard
         },
         setup() {
             getUsers().then((users) => {

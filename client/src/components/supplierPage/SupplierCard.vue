@@ -82,11 +82,8 @@
 
     <!-- right column -->
     <div class="col">
-      <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
-        <h4>Stock</h4>
-        <hr>
-        <img alt="Supplier design" src="./../../assets/SupplierRightSide.png" style="width: 500px;">
-      </div>
+      <StockCard />
+      <img alt="Supplier design" src="./../../assets/SupplierRightSide.png" style="width: 500px;">
     </div>
 
   </div>
@@ -95,6 +92,7 @@
 <script>
   import { ref } from 'vue';
   import ExtraProductInSupplier from "./ExtraProductInSupplier.vue";
+  import StockCard from './../stockContainer/StockCard.vue';
   import { getProducts, getContainers, addContribution } from "./../../apiConfig";
 
   var listOfProducts = ref([]);
@@ -106,7 +104,8 @@
   export default {
     name: 'SupplierCard',
     components: {
-      ExtraProductInSupplier
+      ExtraProductInSupplier,
+      StockCard
     },
     methods: {
       logExtraProducts() {

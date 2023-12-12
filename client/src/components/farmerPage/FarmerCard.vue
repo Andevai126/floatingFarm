@@ -10,14 +10,14 @@
           <p>Gras</p>
           <div class="input-group mb-3">
             <input type="number" v-model="kilosGras" class="form-control no-spinners">
-            <label class="input-group-text">Kilo's</label>
+            <label class="input-group-text">Kilo</label>
           </div>
         </div>
         <div class="col">
           <p >Bierbostel</p>
           <div class="input-group mb-3">
             <input type="number" v-model="kilosBierbostel" class="form-control no-spinners">
-            <label class="input-group-text">Kilo's</label>
+            <label class="input-group-text">Kilo</label>
           </div>
         </div>
 
@@ -27,14 +27,14 @@
           <p>DDGS Proticorn</p>
           <div class="input-group mb-3">
             <input type="number" v-model="kilosDDGSProticorn" class="form-control no-spinners">
-            <label class="input-group-text">Kilo's</label>
+            <label class="input-group-text">Kilo</label>
           </div>
         </div>
         <div class="col">
           <p>Sinaasappelschillen</p>
           <div class="input-group mb-3">
             <input type="number" v-model="kilosSinaasappelschillen" class="form-control no-spinners">
-            <label class="input-group-text">Kilo's</label>
+            <label class="input-group-text">Kilo</label>
           </div>
         </div>
       </div>
@@ -103,11 +103,16 @@
     </div>
 
   </div>
+
+  <!-- stock -->
+  <StockCard />
+
 </template>
 
 <script>
   import { ref } from "vue";
   import ExtraProductInFarmer from "./ExtraProductInFarmer.vue";
+  import StockCard from './../stockContainer/StockCard.vue';
   import { getProducts, addMix } from "./../../apiConfig";
 
   var listOfProducts = ref([]);
@@ -119,6 +124,7 @@
     name: "FarmerCard",
     components: {
       ExtraProductInFarmer,
+      StockCard
     },
     methods: {
       logExtraProducts() {

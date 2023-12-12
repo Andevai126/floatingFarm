@@ -218,3 +218,21 @@ export function addContribution(productsInContribution, dateTime, isDelivery, no
     });
   });
 }
+
+export function getStock() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi(env.apiBase + "/api/website/getStock", store.accessToken).then((stock) => {
+      resolve(stock);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenPopup();
+      simpleGetApi(env.apiBase + "/api/website/getStock", store.accessToken).then((stock) => {
+        resolve(stock);
+      }).catch((error) => {
+        console.error("Failed to get stock: ", error);
+        reject();
+      });
+    });
+  });
+}

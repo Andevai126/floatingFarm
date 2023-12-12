@@ -560,4 +560,26 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
     }
 );
 
+// Get products currently present on quay
+router.get('/getStock', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin, Supplier and Farmer role
+        validRole(req.authInfo['oid'], [2, 3, 5]).then(() => {
+            query(
+                `SELECT products.ID, products.name, products.kilosInStock FROM products;`,
+                [],
+                (results, fields) => {
+                    if (results){
+                        res.status(200).send(results);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
 module.exports = router;
