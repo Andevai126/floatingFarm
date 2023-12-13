@@ -2,7 +2,7 @@
     <div class="row">
         <!-- left column -->
         <div class="col">
-            <AddContribution :canInputSupplier="false"/>
+            <AddContribution />
         </div>
 
         <!-- right column -->
@@ -25,3 +25,4 @@
         }
     }
 </script>
+  
