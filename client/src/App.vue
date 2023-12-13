@@ -19,6 +19,12 @@
     <div v-if="roleId==5">
       <FarmerPage/>
     </div>
+
+    <!-- place for presenter -->
+    
+    <div v-if="roleId==7">
+      <DriverPage/>
+    </div>
   </div>
 </template>
 
@@ -26,25 +32,27 @@
   import { store } from './store';
 
   import NavBar from './components/cards/nav/NavBar.vue';
-
   import WelcomePage from './components/pages/WelcomePage.vue';
+
   import GuestPage from './components/pages/GuestPage.vue';
   import AdminPage from './components/pages/AdminPage.vue';
   import SupplierPage from './components/pages/SupplierPage.vue';
   import UnpackerPage from './components/pages/UnpackerPage.vue';
   import FarmerPage from './components/pages/FarmerPage.vue';
+  import DriverPage from './components/pages/DriverPage.vue';
 
   export default {
     name: 'App',
     components: {
       NavBar,
-      
       WelcomePage,
+
       GuestPage,
       AdminPage,
       SupplierPage,
       UnpackerPage,
-      FarmerPage
+      FarmerPage,
+      DriverPage
     },
     data() {
       return {

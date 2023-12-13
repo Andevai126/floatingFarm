@@ -38,7 +38,21 @@
 		<div class="container mb-3">
 			<div class="form-check form-switch">
 				<input class="form-check-input" type="checkbox" role="switch" v-model="isDelivery">
-				This contribution will be {{ isDelivery ? 'delivered by you.' : 'collected by Floating Farm.' }}
+				This contribution will be {{ isDelivery ? 'delivered.' : 'collected by Floating Farm.' }}
+			</div>
+		</div>
+
+		<!-- choose supplier -->
+		<div v-if="canInputSupplier">
+			<div class="container mb-3">
+				<div class="input-group mb-3">
+					<label class="input-group-text">Supplier</label>
+					<select v-model="selectedSupplier" class="form-control">
+						<option v-for="supplier in suppliers" :key="supplier.ID" :value="supplier.ID">
+							{{ supplier.name }}
+						</option>
+					</select>
+				</div>
 			</div>
 		</div>
 
@@ -77,12 +91,13 @@
 </template>
   
 <script>
-	import { ref } from 'vue';
+	import { ref, toRef } from 'vue';
 	import ExtraProduct from "./ExtraProduct.vue";
-	import { getProducts, getContainers, addContribution } from "../../../apiConfig";
+	import { getProducts, getContainers, getSuppliers, addContribution } from "../../../apiConfig";
 
 	var listOfProducts = ref([]);
 	var listOfContainers = ref([]);
+	var listOfSuppliers = ref([]);
 
 	var currentDate = ref("");
 	var currentTime = ref("");
@@ -97,6 +112,7 @@
 				this.extraProductsInContribution.forEach((product) => {
 					console.log(product.id, product.name, product.quantity, product.containerId, product.containerName);
 				});
+				console.log("canInputSupplier: ", this.canInputSupplier);
 			},
 			addExtraProduct() {
 				this.extraProductsInContribution.push({ id: null, name: '', quantity: 0, containerId: null, containerName: '' });
@@ -111,9 +127,9 @@
 				];
 
 				console.log(productsInContribution);
-				console.log(this.date + " " + this.time, this.isDelivery, this.notes);
+				console.log(this.date + " " + this.time, this.isDelivery, this.selectedSupplier, this.notes);
 				
-				addContribution(productsInContribution, this.date + " " + this.time, this.isDelivery, this.notes)
+				addContribution(productsInContribution, this.date + " " + this.time, this.isDelivery, this.selectedSupplier, this.notes)
 				.then(() => {
 					console.log("Succeeded to add contribution");
 					// Reset variables
@@ -122,6 +138,7 @@
 					this.date = newDate.toISOString().slice(0, 10);
 					this.time = newDate.toTimeString().slice(0, 5);
 					this.isDelivery = true;
+					this.selectedSupplier = null;
 					this.notes = '';
 
 					// Indicate success to user
@@ -151,7 +168,13 @@
 				this.alerts.splice(index, 1);
 			}
 		},
-		setup() {
+		props: {
+            canInputSupplier: {
+                type: Boolean,
+                required: true
+            }
+        },
+		setup(props) {
 			getProducts().then((products) => {
 				console.log("retrieved products: ", products);
 				listOfProducts.value = products;
@@ -160,6 +183,13 @@
 				console.log("retrieved containers: ", containers);
 				listOfContainers.value = containers;
 			});
+			const canInputSupplierObject = toRef(props, 'canInputSupplier');
+            const canInputSupplier = canInputSupplierObject.value;
+            if (canInputSupplier) {
+				getSuppliers().then((suppliers) => {
+					listOfSuppliers.value = suppliers;
+				});
+			}
 			const newDate = new Date();
 			currentDate.value = newDate.toISOString().slice(0, 10);
 			currentTime.value = newDate.toTimeString().slice(0, 5);
@@ -170,6 +200,8 @@
 			return {
 				products: listOfProducts,
 				containers: listOfContainers,
+				suppliers: listOfSuppliers,
+				selectedSupplier: null,
 				extraProductsInContribution: [{ id: null, name: '', quantity: 0, containerId: null, containerName: '' }],
 				date: currentDate,
 				time: currentTime,

@@ -33,7 +33,7 @@ function validRole(b2cObjectID, allowedRoles) {
                 [b2cObjectID],
                 (results, fields) => {
                     if (results && allowedRoles.includes(results[0].ID)){
-                        resolve();
+                        resolve(results[0].ID);
                     } else {
                         reject();
                     }
@@ -172,7 +172,7 @@ router.get('/getRoles', passport.authenticate('oauth-bearer', { session: false }
 router.get('/getSuppliers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Admin role
-        validRole(req.authInfo['oid'], [2]).then(() => {
+        validRole(req.authInfo['oid'], [2, 7]).then(() => {
             query(
                 `SELECT suppliers.ID, suppliers.name FROM suppliers;`,
                 [],
@@ -281,7 +281,7 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
 router.get('/getProducts', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Supplier or Farmer role
-        validRole(req.authInfo['oid'], [3, 5]).then(() => {
+        validRole(req.authInfo['oid'], [3, 5, 7]).then(() => {
             query(
                 `SELECT products.ID, products.name FROM products;`,
                 [],
@@ -418,7 +418,7 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
 router.get('/getContainers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Supplier role
-        validRole(req.authInfo['oid'], [3]).then(() => {
+        validRole(req.authInfo['oid'], [3, 7]).then(() => {
             query(
                 `SELECT containers.ID, containers.name, containers.litres FROM containers;`,
                 [],
@@ -436,17 +436,82 @@ router.get('/getContainers', passport.authenticate('oauth-bearer', { session: fa
     }
 );
 
+// Helper function to add contribution
+function addContribution(supplierId, currentDateTime, dateTime, isDelivery, notes, productsInContribution, res) {
+    query(
+        `INSERT INTO contributions (supplierID, dateTime, dateTimeOfTransport, isDelivery, supplierNotes)
+        VALUES (?, ?, ?, ?, ?);`,
+        [supplierId, currentDateTime, dateTime, isDelivery, notes],
+        ((results, fields) => {
+            if (results.affectedRows == 1) {
+                const contributionId = results.insertId;
+                var productsFound = [];
+                var products = [];
+                var productsQuery = "INSERT INTO productsincontribution (contributionID, productID, containerID, unregisteredProductName, quantity, unregisteredContainerName) VALUES ";
+
+                // Ignore empty, duplicate or weightless ones
+                productsInContribution.forEach((product) => {
+                    if (!(product.id === null && product.name === '') && !productsFound.includes(product.id) && !productsFound.includes(product.name) && product.kilos != 0) {
+                        // If the id is present, don't save the name
+                        const productName = (product.id === null) ? product.name : null;
+                        const containerName = (product.containerId === null) ? product.containerName : null;
+                        // Add to products that will be send with query
+                        products.push(contributionId, product.id, product.containerId, productName, product.quantity, containerName);
+                        
+                        // Update found products
+                        if (product.id !== null) {
+                            productsFound.push(product.id);
+                        } else {
+                            productsFound.push(product.name);
+                        }
+                    }
+                });
+
+                // If present, add products to database
+                if (products.length != 0) {
+                    // Add as many slots as there are records to be added
+                    for (var i = 0; i < products.length/6-1; i++) {
+                        productsQuery += '(?, ?, ?, ?, ?, ?), ';
+                    }
+                    productsQuery += '(?, ?, ?, ?, ?, ?);';
+
+                    // Send productsInContribution to database
+                    query(
+                        productsQuery,
+                        products,
+                        (results, fields) => {
+                            console.log("products finished");
+                            res.status(200).send();
+                        }
+                    );
+                }
+                
+                // console.log(mixID);
+                // console.log(registeredProductsQuery);
+                // console.log(registeredProducts);
+                // console.log(unregisteredProductsQuery);
+                // console.log(unregisteredProducts);
+                
+            } else {
+                res.status(500).send();
+            }
+        })
+    );
+}
+
 // Add contribution with products in contribution
 router.post('/addContribution', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Supplier role
-        validRole(req.authInfo['oid'], [3]).then(() => {
+        // Check for Supplier and Driver role
+        validRole(req.authInfo['oid'], [3, 7]).then((roleId) => {
             // Check if all given values are ok
             const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
             const dateTimeOk = req.body.hasOwnProperty('dateTime') && regex.test(req.body.dateTime);
             const isDeliveryOk = req.body.hasOwnProperty('isDelivery') && (req.body.isDelivery === true || req.body.isDelivery === false);
+            const isSupplierIdOk = req.body.hasOwnProperty('supplierId') && ( (roleId === 7) ? (typeof req.body.supplierId === 'number' && req.body.supplierId > 0) : req.body.supplierId === null );
             const notesOk = req.body.hasOwnProperty('notes') && (req.body.notes.length < 256 || req.body.notes === null);
-            var productsInContributionOk = true;
+            var productsInContributionOk = req.body.hasOwnProperty('productsInContribution') && req.body.productsInContribution !== null;
+            var allProductsInContributionEmpty = true;
             try {
                 req.body.productsInContribution.forEach((product) => {
                     const registeredOk = typeof product.id === 'number' && product.id > 0;
@@ -460,13 +525,20 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
                         console.log("addContribution failed: ", emptyOk, registeredOk, unregisteredOk, quantityOk, containerRegisteredOk, containerUnregisteredOk);
                         productsInContributionOk = false;
                     }
+
+                    if (!emptyOk) {
+                        allProductsInContributionEmpty = false;
+                    }
                 });
             } catch (error) {
                 console.log("addContribution failed: ", error);
                 productsInContributionOk = false;
             }
+            if (allProductsInContributionEmpty) {
+                productsInContributionOk = false;
+            }
             // If not, send code bad request
-            if (!dateTimeOk || !isDeliveryOk || !notesOk || !productsInContributionOk) {
+            if (!dateTimeOk || !isDeliveryOk || !isSupplierIdOk || !notesOk || !productsInContributionOk) {
                 console.log("body: ", req.body);
                 res.status(400).send();
             } else {
@@ -477,82 +549,30 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
                     req.body.notes = null;
                 }
 
-                query(
-                    `SELECT users.supplierID FROM users WHERE users.b2cObjectID = ?`,
-                    [req.authInfo['oid']],
-                    ((results, fields) => {
-                        if (results) { // this is prob not a good check, put try/catch around all query()'s?
-                            const supplierId = results[0].supplierID;
-                            const newDate = new Date();
-                            const currentDate = newDate.toISOString().slice(0, 10);
-                            const currentTime = newDate.toTimeString().slice(0, 5);
-                            const currentDateTime = currentDate + " " + currentTime;
+                const newDate = new Date();
+                const currentDate = newDate.toISOString().slice(0, 10);
+                const currentTime = newDate.toTimeString().slice(0, 5);
+                const currentDateTime = currentDate + " " + currentTime;
 
-                            // Add a contribution
-                            query(
-                                `INSERT INTO contributions (supplierID, dateTime, dateTimeOfTransport, isDelivery, supplierNotes)
-                                VALUES (?, ?, ?, ?, ?);`,
-                                [supplierId, currentDateTime, req.body.dateTime, req.body.isDelivery, req.body.notes],
-                                ((results, fields) => {
-                                    if (results.affectedRows == 1) {
-                                        const contributionId = results.insertId;
-                                        var productsFound = [];
-                                        var products = [];
-                                        var productsQuery = "INSERT INTO productsincontribution (contributionID, productID, containerID, unregisteredProductName, quantity, unregisteredContainerName) VALUES ";
-
-                                        // Ignore empty, duplicate or weightless ones
-                                        req.body.productsInContribution.forEach((product) => {
-                                            if (!(product.id === null && product.name === '') && !productsFound.includes(product.id) && !productsFound.includes(product.name) && product.kilos != 0) {
-                                                // If the id is present, don't save the name
-                                                const productName = (product.id === null) ? product.name : null;
-                                                const containerName = (product.containerId === null) ? product.containerName : null;
-                                                // Add to products that will be send with query
-                                                products.push(contributionId, product.id, product.containerId, productName, product.quantity, containerName);
-                                                
-                                                // Update found products
-                                                if (product.id !== null) {
-                                                    productsFound.push(product.id);
-                                                } else {
-                                                    productsFound.push(product.name);
-                                                }
-                                            }
-                                        });
-
-                                        // If present, add products to database
-                                        if (products.length != 0) {
-                                            // Add as many slots as there are records to be added
-                                            for (var i = 0; i < products.length/6-1; i++) {
-                                                productsQuery += '(?, ?, ?, ?, ?, ?), ';
-                                            }
-                                            productsQuery += '(?, ?, ?, ?, ?, ?);';
-
-                                            // Send productsInContribution to database
-                                            query(
-                                                productsQuery,
-                                                products,
-                                                (results, fields) => {
-                                                    console.log("products finished");
-                                                    res.status(200).send();
-                                                }
-                                            );
-                                        }
-                                        
-                                        // console.log(mixID);
-                                        // console.log(registeredProductsQuery);
-                                        // console.log(registeredProducts);
-                                        // console.log(unregisteredProductsQuery);
-                                        // console.log(unregisteredProducts);
-                                        
-                                    } else {
-                                        res.status(500).send();
-                                    }
-                                })
-                            );
-                        } else {
-                            res.status(500).send();
-                        }
-                    })
-                )
+                if (roleId === 3) {
+                    query(
+                        `SELECT users.supplierID FROM users WHERE users.b2cObjectID = ?`,
+                        [req.authInfo['oid']],
+                        ((results, fields) => {
+                            if (results) { // this is prob not a good check, put try/catch around all query()'s?
+                                const supplierId = results[0].supplierID;
+                                
+                                // Add a contribution
+                                addContribution(supplierId, currentDateTime, req.body.dateTime, req.body.isDelivery, req.body.notes, req.body.productsInContribution, res);
+                            } else {
+                                res.status(500).send();
+                            }
+                        })
+                    );
+                } else {
+                    // Add a contribution
+                    addContribution(req.body.supplierId, currentDateTime, req.body.dateTime, req.body.isDelivery, req.body.notes, req.body.productsInContribution, res);
+                }
             }
         }).catch(() => {
             res.status(401).send();

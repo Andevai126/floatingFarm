@@ -197,17 +197,17 @@ export function getContainers() {
   });
 }
 
-export function addContribution(productsInContribution, dateTime, isDelivery, notes) {
+export function addContribution(productsInContribution, dateTime, isDelivery, supplierId, notes) {
   return new Promise((resolve, reject) => {
     // Try with stored access token
-    simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, notes: notes})
+    simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, supplierId: supplierId, notes: notes})
     .then(() => {
       resolve();
     })
     // Try with acquired access token
     .catch(async () => {
       await getTokenPopup();
-      simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, notes: notes})
+      simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, supplierId: supplierId, notes: notes})
       .then(() => {
         resolve();
       })
