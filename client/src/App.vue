@@ -45,7 +45,7 @@
       SupplierPage,
       UnpackerPage,
       FarmerPage
-  },
+    },
     data() {
       return {
         authenticated: store.authenticated,
