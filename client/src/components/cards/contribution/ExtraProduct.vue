@@ -43,7 +43,7 @@
 
 <script>
     export default {
-        name: 'ExtraProductInSupplier',
+        name: 'ExtraProduct',
         emits: ['updateExtraProductEvent'],
         methods: {
             nameChanged() {

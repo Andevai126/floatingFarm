@@ -8,6 +8,6 @@
 
 <script>
   export default {
-    name: 'WelcomeCard'
+    name: 'WelcomePage'
   }
 </script>

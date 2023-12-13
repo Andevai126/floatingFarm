@@ -9,6 +9,6 @@
 
 <script>
   export default {
-    name: 'GuestCard',
+    name: 'GuestPage',
   }
 </script>

@@ -5,7 +5,8 @@
 
         <div class="row">
             <div v-for="(stockProduct, index) in stockProducts" :key="index" class="col-md-4 col-sm-6">
-                <ProductInStock
+                <ProductInformation
+                    :canEdit="canEdit"
                     :stockProduct="stockProduct"
                     :index="index"
                     @updateProductInStockEvent="handleProductInStock"
@@ -15,29 +16,25 @@
         </div>
 
         <!-- send -->
-        <div v-if="roleId==2 || roleId==5">
+        <div v-if="canEdit">
             <div class="row justify-content-center mb-3">
                 <button @click="saveStock" class="btn btn-primary text-dark bg-white col col-3">Send</button>
             </div>
         </div>
-
-        <!-- <img alt="Unpacker design" src="./../assets/SupplierRightSide.png"> -->
     </div>
 </template>
   
 <script>
     import { ref } from "vue";
-    import ProductInStock from "./ProductInStock.vue";
-    import { store } from "./../../store";
-    import { getStock } from "./../../apiConfig";
+    import ProductInformation from "./ProductInformation.vue";
+    import { getStock } from "../../../apiConfig";
 
     var listOfStockProducts = ref([]);
 
-
     export default {
-        name: 'StockCard',
+        name: 'StockContainer',
         components: {
-            ProductInStock,
+            ProductInformation,
         },
         methods: {
             logStockProducts() {
@@ -53,6 +50,12 @@
                 console.log("test: stock saved!");
             }
         },
+        props: {
+            canEdit: {
+                type: Boolean,
+                required: true
+            }
+        },
         setup() {
             getStock().then((stockProducts) => {
                 console.log("retrieved stock products: ", stockProducts);
@@ -61,7 +64,6 @@
         },
         data() {
             return {
-                roleId: store.roleId,
                 stockProducts: listOfStockProducts,
             }
         }

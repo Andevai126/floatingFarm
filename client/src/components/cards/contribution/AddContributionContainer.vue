@@ -1,99 +1,85 @@
 <template>
-  <div class="row">
-    <!-- left column -->
-    <div class="col">
-      <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
-        <h4>Products</h4>
-        <hr>
+  <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+    <h4>Products</h4>
+    <hr>
 
-        <!-- product inputs -->
-        <div v-for="(extraProduct, index) in extraProductsInContribution" :key="index">
-          <ExtraProductInSupplier
-            :products="products"
-            :containers="containers"
-            :index="index"
-            @updateExtraProductEvent="handleExtraProduct"
-          />
-          <br />
+    <!-- product inputs -->
+    <div v-for="(extraProduct, index) in extraProductsInContribution" :key="index">
+      <ExtraProduct
+        :products="products"
+        :containers="containers"
+        :index="index"
+        @updateExtraProductEvent="handleExtraProduct"
+      />
+      <br />
+    </div>
+
+    <!-- products button -->
+    <div class="row justify-content-center mb-3">
+      <button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
+    </div>
+
+    <h4>Logistics of Transport</h4>
+    <hr>
+
+    <!-- date and time -->
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col">
+          <input type="date" v-model="date" class="form-control" />
         </div>
-
-        <!-- products button -->
-        <div class="row justify-content-center mb-3">
-          <button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
+        <div class="col">
+          <input type="time" v-model="time" class="form-control" />
         </div>
-
-        <h4>Logistics of Transport</h4>
-        <hr>
-
-        <!-- date and time -->
-        <div class="container mb-3">
-          <div class="row">
-            <div class="col">
-              <input type="date" v-model="date" class="form-control" />
-            </div>
-            <div class="col">
-              <input type="time" v-model="time" class="form-control" />
-            </div>
-          </div>
-        </div>
-
-        <!-- is delivery -->
-        <div class="container mb-3">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" v-model="isDelivery">
-            This contribution will be {{ isDelivery ? 'delivered by you.' : 'collected by Floating Farm.' }}
-          </div>
-        </div>
-
-        <h4>Notes</h4>
-        <hr>
-
-        <!-- notes -->
-        <div class="container mb-3">
-          <textarea
-            v-model="notes"
-            class="form-control"
-            maxlength="256"
-            style="height: 100px"
-          ></textarea>
-        </div>
-
-        <!-- send -->
-        <div class="row justify-content-center mb-3">
-          <button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Send</button>
-        </div>
-
-        <!-- alerts -->
-        <div class="container mb-3">
-          <div v-for="(alert, index) in alerts" :key="index" class="alert fade show " :class="alert.type" role="alert">
-            <div class="container d-flex align-items-center">
-              <div class="container">
-                <strong>{{ alert.title }}</strong> &nbsp; {{ alert.message }}
-              </div>
-              <button @click="hideAlert(index)" type="button" class="btn btn-success text-dark bg-white close" aria-label="Close" style="float: right; margin: 0.75rem">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
 
-    <!-- right column -->
-    <div class="col">
-      <StockCard />
-      <img alt="Supplier design" src="./../../assets/SupplierRightSide.png" style="width: 500px;">
+    <!-- is delivery -->
+    <div class="container mb-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" v-model="isDelivery">
+        This contribution will be {{ isDelivery ? 'delivered by you.' : 'collected by Floating Farm.' }}
+      </div>
     </div>
 
+    <h4>Notes</h4>
+    <hr>
+
+    <!-- notes -->
+    <div class="container mb-3">
+      <textarea
+        v-model="notes"
+        class="form-control"
+        maxlength="256"
+        style="height: 100px"
+      ></textarea>
+    </div>
+
+    <!-- send -->
+    <div class="row justify-content-center mb-3">
+      <button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Send</button>
+    </div>
+
+    <!-- alerts -->
+    <div class="container mb-3">
+      <div v-for="(alert, index) in alerts" :key="index" class="alert fade show " :class="alert.type" role="alert">
+        <div class="container d-flex align-items-center">
+          <div class="container">
+            <strong>{{ alert.title }}</strong> &nbsp; {{ alert.message }}
+          </div>
+          <button @click="hideAlert(index)" type="button" class="btn btn-success text-dark bg-white close" aria-label="Close" style="float: right; margin: 0.75rem">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
   
 <script>
   import { ref } from 'vue';
-  import ExtraProductInSupplier from "./ExtraProductInSupplier.vue";
-  import StockCard from './../stockContainer/StockCard.vue';
-  import { getProducts, getContainers, addContribution } from "./../../apiConfig";
+  import ExtraProduct from "./ExtraProduct.vue";
+  import { getProducts, getContainers, addContribution } from "../../../apiConfig";
 
   var listOfProducts = ref([]);
   var listOfContainers = ref([]);
@@ -102,10 +88,9 @@
   var currentTime = ref("");
 
   export default {
-    name: 'SupplierCard',
+    name: 'AddContributionContainer',
     components: {
-      ExtraProductInSupplier,
-      StockCard
+      ExtraProduct,
     },
     methods: {
       logExtraProducts() {

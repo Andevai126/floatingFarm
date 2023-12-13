@@ -16,24 +16,17 @@
             </thead>
             <tbody>
                 <tr v-for="user in users" :key="user">
-                    <UserInList :user="user" :roles="roles" :suppliers="suppliers"/>
+                    <UserInformation :user="user" :roles="roles" :suppliers="suppliers"/>
                 </tr>
             </tbody>
         </table>
     </div>
-    
-    <!-- stock -->
-    <StockCard />
-
-    <!-- design -->
-    <img alt="Admin design" src="./../../assets/Admin.png">
 </template>
 
 <script>
     import { ref } from 'vue';
-    import UserInList from './UserInList.vue'
-    import StockCard from './../stockContainer/StockCard.vue';
-    import { getUsers, getRoles, getSuppliers } from './../../apiConfig';
+    import UserInformation from './UserInformation.vue'
+    import { getUsers, getRoles, getSuppliers } from '../../../apiConfig';
     
     var listOfUsers = ref([]);
     var listOfRoles = ref([]);
@@ -42,8 +35,7 @@
     export default {
         name: 'AdminCard',
         components: {
-            UserInList,
-            StockCard
+            UserInformation,
         },
         setup() {
             getUsers().then((users) => {

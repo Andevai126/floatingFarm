@@ -2,13 +2,13 @@
 	<div class="row justify-content-md-center">
 		<div class="container rounded border col col-6 pt-3 mb-3 text-center">
 			<!-- image -->
-			<img :src="require(`./../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3">
+			<img :src="require(`../../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3">
 
 			<!-- title -->
 			<p>{{ this.stockProduct.name }}</p>
 
 			<!-- input weight for admin and farmer -->
-			<div v-if="roleId==2 || roleId==5">
+			<div v-if="canEdit">
 				<div class="input-group mb-3">
 					<input type="number" v-model="kilos" @input="kilosChanged" class="form-control no-spinners">
 					<label class="input-group-text">Kilo</label>
@@ -25,13 +25,12 @@
 
 <script>
 	import { toRef } from "vue";
-	import { store } from "./../../store";
 
 	var defaultKilos = null;
 	var defaultImageId = null;
 
 	export default {
-		name: 'ProductInStock',
+		name: 'ProductInformation',
 		emits: ['updateProductInStockEvent'],
 		methods: {
 			kilosChanged() {
@@ -43,6 +42,10 @@
 			}
 		},
 		props: {
+			canEdit: {
+				type: Boolean,
+				required: true
+			},
 			stockProduct: {
 				type: Object,
 				required: true
@@ -56,7 +59,7 @@
 			const stockProduct = toRef(props, 'stockProduct');
 			defaultKilos = stockProduct.value.kilosInStock;
 			try {
-				require(`./../../assets/products/${stockProduct.value.ID}.png`);
+				require(`../../../assets/products/${stockProduct.value.ID}.png`);
 				defaultImageId = stockProduct.value.ID;
 			} catch (error) {
 				defaultImageId = 0;
@@ -64,7 +67,6 @@
 		},
 		data() {
 			return {
-				roleId: store.roleId,
 				kilos: defaultKilos,
 				imageId: defaultImageId
 			}

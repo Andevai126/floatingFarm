@@ -26,7 +26,7 @@
 
 <script>
     export default {
-        name: 'ExtraProductInFarmer',
+        name: 'ExtraProduct',
         emits: ['updateExtraProductEvent'],
         methods: {
             nameChanged() {

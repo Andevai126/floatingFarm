@@ -42,7 +42,7 @@
 
     <!-- extra product inputs -->
     <div v-for="(extraProduct, index) in extraProductsInMix" :key="index">
-      <ExtraProductInFarmer
+      <ExtraProduct
         :products="products"
         :index="index"
         @updateExtraProductEvent="handleExtraProduct"
@@ -103,17 +103,12 @@
     </div>
 
   </div>
-
-  <!-- stock -->
-  <StockCard />
-
 </template>
 
 <script>
   import { ref } from "vue";
-  import ExtraProductInFarmer from "./ExtraProductInFarmer.vue";
-  import StockCard from './../stockContainer/StockCard.vue';
-  import { getProducts, addMix } from "./../../apiConfig";
+  import ExtraProduct from "./ExtraProduct.vue";
+  import { getProducts, addMix } from "../../../apiConfig";
 
   var listOfProducts = ref([]);
 
@@ -121,10 +116,9 @@
   var currentTime = ref("");
 
   export default {
-    name: "FarmerCard",
+    name: "AddMixContainer",
     components: {
-      ExtraProductInFarmer,
-      StockCard
+      ExtraProduct
     },
     methods: {
       logExtraProducts() {

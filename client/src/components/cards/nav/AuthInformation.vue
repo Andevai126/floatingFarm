@@ -10,11 +10,11 @@
 </template>
   
 <script>
-    import { signIn, signOut, editProfile } from './../apiConfig';
-    import { store } from './../store';
+    import { signIn, signOut, editProfile } from '../../../apiConfig';
+    import { store } from '../../../store';
 
     export default {
-        name: 'AuthComponent',
+        name: 'AuthInformation',
         data() {
             return {
                 authenticated: store.authenticated,

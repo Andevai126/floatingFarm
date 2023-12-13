@@ -45,7 +45,7 @@
 
 <script>
     import { toRef } from 'vue';
-    import { updateUser, deleteUser } from './../../apiConfig';
+    import { updateUser, deleteUser } from '../../../apiConfig';
 
     var defaultRole = null;
     var defaultSupplier = null;
