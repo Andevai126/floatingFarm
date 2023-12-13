@@ -2,7 +2,7 @@
 	<div class="row justify-content-md-center">
 		<div class="container rounded border col col-6 pt-3 mb-3 text-center">
 			<!-- image -->
-			<img src="./../../assets/products/0.png" alt="dynamically inserted picture of" class="mb-3">
+			<img :src="require(`./../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3">
 
 			<!-- title -->
 			<p>{{ this.stockProduct.name }}</p>
@@ -28,6 +28,7 @@
 	import { store } from "./../../store";
 
 	var defaultKilos = null;
+	var defaultImageId = null;
 
 	export default {
 		name: 'ProductInStock',
@@ -54,12 +55,18 @@
 		setup(props) {
 			const stockProduct = toRef(props, 'stockProduct');
 			defaultKilos = stockProduct.value.kilosInStock;
+			try {
+				require(`./../../assets/products/${stockProduct.value.ID}.png`);
+				defaultImageId = stockProduct.value.ID;
+			} catch (error) {
+				defaultImageId = 0;
+			}
 		},
 		data() {
 			return {
 				roleId: store.roleId,
 				kilos: defaultKilos,
-				imageAddress: "./../../assets/products/0.png"
+				imageId: defaultImageId
 			}
 		}
 	}
