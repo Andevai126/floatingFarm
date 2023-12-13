@@ -120,6 +120,7 @@
                 this.updateExtraProduct();
             },
             updateExtraProduct() {
+                // check for extra spaces in this.name ?
                 const quantity = (typeof this.quantity === 'number') ? this.quantity : 0;
                 this.$emit('updateExtraProductEvent', {index: this.index, id: this.id, name: this.name, quantity: quantity, containerId: this.containerId, containerName: this.containerName});
             }
