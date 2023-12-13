@@ -19,7 +19,7 @@
         <!-- send -->
         <div v-if="canEdit">
             <div class="row justify-content-center mb-3">
-                <button @click="saveStock" class="btn btn-primary text-dark bg-white col col-3">Send</button>
+                <button @click="updateStock" class="btn btn-primary text-dark bg-white col col-3">Send</button>
             </div>
         </div>
 
@@ -29,7 +29,7 @@
 <script>
     import { ref } from "vue";
     import ProductInformation from "./ProductInformation.vue";
-    import { getStock } from "../../../apiConfig";
+    import { getStock, updateStock } from "../../../apiConfig";
 
     var listOfStockProducts = ref([]);
 
@@ -48,8 +48,16 @@
                 this.stockProducts[stockProduct.index] = { ID: stockProduct.ID, name: stockProduct.name, kilosInStock: stockProduct.kilosInStock };
                 this.logStockProducts();
             },
-            saveStock() {
-                console.log("test: stock saved!");
+            updateStock() {
+                this.logStockProducts();
+
+                updateStock(this.stockProducts)
+                .then(() => {
+                    console.log("test: stock saved!");
+                })
+                .catch(() => {
+                    console.log("test: stock failed!");
+                });
             }
         },
         props: {
@@ -72,8 +80,4 @@
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
   

@@ -602,4 +602,14 @@ router.get('/getStock', passport.authenticate('oauth-bearer', { session: false }
     }
 );
 
+// Update products currently present on quay
+router.post('/updateStock', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin and Farmer role
+        validRole(req.authInfo['oid'], [2, 5]).then(() => {
+            res.status(200).send("hey");
+        });
+    }
+);
+
 module.exports = router;

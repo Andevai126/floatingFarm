@@ -236,3 +236,25 @@ export function getStock() {
     });
   });
 }
+
+export function updateStock(stockProducts) {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simplePostApi(env.apiBase + "/api/website/updateStock", store.accessToken, {stockProducts: stockProducts})
+    .then(() => {
+      resolve();
+    })
+    // Try with acquired access token
+    .catch(async () => {
+      await getTokenPopup();
+      simplePostApi(env.apiBase + "/api/website/updateStock", store.accessToken, {stockProducts: stockProducts})
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        console.error("Failed to update stock: ", error);
+        reject();
+      });
+    });
+  });
+}
