@@ -16,21 +16,6 @@
         components: {
             AddMixContainer,
             StockContainer
-        },
-        methods: {
-
-        },
-      setup() {
-        },
-        data() {
-            return {
-
-            };
-        },
+        }
     };
 </script>
-  
-<style scoped>
-
-</style>
-  

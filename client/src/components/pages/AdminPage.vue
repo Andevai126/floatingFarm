@@ -18,14 +18,6 @@
         components: {
             UsersContainer,
             StockContainer
-        },
-        setup() {
-
-        },
-        data() {
-            return {
-
-            };
         }
     }
 </script>

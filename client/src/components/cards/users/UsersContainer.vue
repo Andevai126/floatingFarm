@@ -1,6 +1,6 @@
 <template>
-    <!-- users -->
     <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+
         <h4>Users</h4>
         <hr>
 
@@ -20,6 +20,7 @@
                 </tr>
             </tbody>
         </table>
+
     </div>
 </template>
 

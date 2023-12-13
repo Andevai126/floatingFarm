@@ -13,7 +13,7 @@
     </div>
 </template>
     
-  <script>
+<script>
     import AddContribution from "../cards/contribution/AddContributionContainer.vue";
     import StockContainer from "../cards/stock/StockContainer.vue";
   
@@ -22,14 +22,6 @@
         components: {
             AddContribution,
             StockContainer
-        },
-        setup() {  
-            console.log(`price is with a "c"`);
-        },
-        data() {
-            return {
-
-            }
         }
     }
 </script>

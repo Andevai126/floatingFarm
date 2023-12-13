@@ -1,6 +1,7 @@
 <template>
 	<div class="row justify-content-md-center">
 		<div class="container rounded border col col-6 pt-3 mb-3 text-center">
+
 			<!-- image -->
 			<img :src="require(`../../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3">
 
@@ -19,6 +20,7 @@
 			<div v-else>
 				{{ kilos }} Kilo
 			</div>
+
 		</div>
 	</div>
 </template>
@@ -75,13 +77,13 @@
 </script>
 
 <style scoped>
-  /* Custom CSS to hide number input arrows */
-  .no-spinners {
-	-moz-appearance: textfield;
-	appearance: textfield;
-  }
-  .no-spinners::-webkit-inner-spin-button, .no-spinners::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
-  }
+    /* Custom CSS to hide number input arrows */
+    .no-spinners {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    .no-spinners::-webkit-inner-spin-button, .no-spinners::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 </style>

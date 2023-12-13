@@ -1,5 +1,6 @@
 <template>
     <div class="container rounded border bg-light shadow p-3 mt-5 mb-3">
+
         <h4>Stock</h4>
         <hr>
 
@@ -21,6 +22,7 @@
                 <button @click="saveStock" class="btn btn-primary text-dark bg-white col col-3">Send</button>
             </div>
         </div>
+
     </div>
 </template>
   
@@ -39,7 +41,7 @@
         methods: {
             logStockProducts() {
                 this.stockProducts.forEach((stockProduct) => {
-                console.log(stockProduct.ID, stockProduct.name, stockProduct.kilosInStock);
+                    console.log(stockProduct.ID, stockProduct.name, stockProduct.kilosInStock);
                 });
             },
             handleProductInStock(stockProduct) {
