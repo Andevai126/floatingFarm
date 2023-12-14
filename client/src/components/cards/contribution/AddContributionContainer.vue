@@ -193,8 +193,6 @@
 			const newDate = new Date();
 			currentDate.value = newDate.toISOString().slice(0, 10);
 			currentTime.value = newDate.toTimeString().slice(0, 5);
-
-			console.log(`price is with a "c"`);
 		},
 		data() {
 			return {

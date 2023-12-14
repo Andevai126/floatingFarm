@@ -4,8 +4,9 @@
         <h4>Stock</h4>
         <hr>
 
+        <!-- products -->
         <div class="row">
-            <div v-for="(stockProduct, index) in stockProducts" :key="index" class="col-md-4 col-sm-6">
+            <div v-for="(stockProduct, index) in filteredStockProducts" :key="index" class="col-md-4 col-sm-6">
                 <ProductInformation
                     :canEdit="canEdit"
                     :stockProduct="stockProduct"
@@ -49,9 +50,10 @@
                 this.logStockProducts();
             },
             updateStock() {
+                const stockProductsWithoutName = this.stockProducts.map(s => ({ID: s.ID, kilosInStock: s.kilosInStock}))
                 this.logStockProducts();
 
-                updateStock(this.stockProducts)
+                updateStock(stockProductsWithoutName)
                 .then(() => {
                     console.log("test: stock saved!");
                 })
@@ -76,8 +78,14 @@
             return {
                 stockProducts: listOfStockProducts,
             }
-        }
+        },
+        computed: {
+            filteredStockProducts() {
+                return this.stockProducts.filter((product) => {
+                    // if you can't edit the values, dont show products that aren't present, otherwise, show all products
+                    return (!this.canEdit && product.kilosInStock !== 0) || this.canEdit;
+                });
+            },
+        },
     }
 </script>
-
-  

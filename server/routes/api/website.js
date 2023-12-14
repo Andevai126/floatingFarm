@@ -309,6 +309,7 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
             const dateTimeOk = req.body.hasOwnProperty('dateTime') && regex.test(req.body.dateTime);
             const notesOk = req.body.hasOwnProperty('notes') && (req.body.notes.length < 256 || req.body.notes === null);
             var productsInMixOk = true;
+            var allProductsInMixEmpty = true;
             try {
                 req.body.productsInMix.forEach((product) => {
                     const registeredOk = typeof product.id === 'number' && product.id > 0;
@@ -320,9 +321,16 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                         console.log("addMix failed: ", emptyOk, registeredOk, unregisteredOk, kilosOk);
                         productsInMixOk = false;
                     }
+
+                    if (!emptyOk) {
+                        allProductsInMixEmpty = false;
+                    }
                 });
             } catch (error) {
                 console.log("addMix failed: ", error);
+                productsInMixOk = false;
+            }
+            if (allProductsInMixEmpty) {
                 productsInMixOk = false;
             }
             // If not, send code bad request
@@ -607,7 +615,73 @@ router.post('/updateStock', passport.authenticate('oauth-bearer', { session: fal
     (req, res) => {
         // Check for Admin and Farmer role
         validRole(req.authInfo['oid'], [2, 5]).then(() => {
-            res.status(200).send("hey");
+            // Check if all given values are ok
+            var stockProductsOk = req.body.hasOwnProperty('stockProducts') && req.body.stockProducts !== null;
+            try {
+                req.body.stockProducts.forEach((product) => {
+                    const idOk = typeof product.ID === 'number' && product.ID > 0;
+                    const kilosInStockOk = typeof product.kilosInStock === 'number' && product.kilosInStock >= 0;
+
+                    if (!(idOk && kilosInStockOk)) {
+                        console.log("updateStock failed: ", idOk, kilosInStockOk);
+                        stockProductsOk = false;
+                    }
+                });
+            } catch (error) {
+                console.log("updateStock failed: ", error);
+                stockProductsOk = false;
+            }
+            // If not, send code bad request
+            if (!stockProductsOk) {
+                console.log("body: ", req.body);
+                res.status(400).send();
+            } else {
+                // Example
+
+                // UPDATE products
+                // SET kilosInStock = 
+                //     CASE 
+                //         WHEN ID = 1 THEN 30
+                //         WHEN ID = 2 THEN 20
+                //         ELSE kilosInStock
+                //     END
+                // WHERE ID IN (0,1,2);
+
+                // Parts of the query
+                var firstPartQuery = 'UPDATE products SET kilosInStock = CASE ';
+                var rows = [];
+                var secondPartQuery = 'ELSE kilosInStock END WHERE ID IN (0';
+                var ids = [];
+
+                // Create dynamic parts of the query
+                req.body.stockProducts.forEach((product) => {
+                    firstPartQuery += 'WHEN ID = ? THEN ? ';
+                    rows.push(product.ID, product.kilosInStock);
+
+                    secondPartQuery += ',?'
+                    ids.push(product.ID);
+                });
+
+                // Finalisation
+                const finalQuery = firstPartQuery + secondPartQuery + ');';
+                const values = [...rows, ...ids];
+
+                // console.log(finalQuery);
+                // console.log(values);
+                
+                // Update stock
+                query(
+                    finalQuery,
+                    values,
+                    (results, fields) => {
+                        if (results) {
+                            res.status(200).send();
+                        } else {
+                            res.status(500).send();
+                        }
+                    }
+                );
+            }
         });
     }
 );

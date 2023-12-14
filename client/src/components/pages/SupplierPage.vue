@@ -1,14 +1,14 @@
 <template>
-    <div class="row">
+    <div class="row g-0">
         <!-- left column -->
-        <div class="col">
+        <div class="col p-2">
             <AddContribution :canInputSupplier="false"/>
         </div>
 
         <!-- right column -->
-        <div class="col">
+        <div class="col p-2">
             <StockContainer :canEdit="false"/>
-            <img alt="Supplier design" src="../../assets/SupplierRightSide.png" style="width: 500px;">
+            <InfoContainer />
         </div>
     </div>
 </template>
@@ -16,12 +16,14 @@
 <script>
     import AddContribution from "../cards/contribution/AddContributionContainer.vue";
     import StockContainer from "../cards/stock/StockContainer.vue";
+    import InfoContainer from "../cards/InfoContainer.vue";
   
     export default {
         name: 'SupplierPage',
         components: {
             AddContribution,
-            StockContainer
+            StockContainer,
+            InfoContainer
         }
     }
 </script>
