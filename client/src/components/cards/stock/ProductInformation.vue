@@ -1,9 +1,9 @@
 <template>
 	<div class="row justify-content-md-center">
-		<div class="container rounded border col col-6 pt-3 mb-3 text-center">
+		<div class="container rounded border col-10 pt-3 mb-3 text-center">
 
 			<!-- image -->
-			<img :src="require(`../../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3">
+			<img :src="require(`../../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3" style="width: 75px">
 
 			<!-- title -->
 			<p>{{ this.stockProduct.name }}</p>
