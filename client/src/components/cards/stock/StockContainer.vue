@@ -20,7 +20,7 @@
         <!-- send -->
         <div v-if="canEdit">
             <div class="row justify-content-center mb-3">
-                <button @click="updateStock" class="btn btn-primary text-dark bg-white col col-3">Send</button>
+                <button @click="updateStock" class="btn btn-primary text-dark bg-white col col-3">Save</button>
             </div>
         </div>
 

@@ -26,10 +26,16 @@
 		<div class="container mb-3">
 			<div class="row">
 				<div class="col">
-				<input type="date" v-model="date" class="form-control" />
+					<div class="input-group">
+						<label class="input-group-text">Date</label>
+						<input type="date" v-model="date" class="form-control" />
+					</div>
 				</div>
 				<div class="col">
-				<input type="time" v-model="time" class="form-control" />
+					<div class="input-group">
+						<label class="input-group-text">Time</label>
+						<input type="time" v-model="time" class="form-control" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -66,12 +72,13 @@
 				class="form-control"
 				maxlength="256"
 				style="height: 100px"
+				placeholder="Tap to type..."
 			></textarea>
 		</div>
 
 		<!-- send -->
 		<div class="row justify-content-center mb-3">
-			<button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Send</button>
+			<button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Save</button>
 		</div>
 
 		<!-- alerts -->

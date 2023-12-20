@@ -1,7 +1,7 @@
 <template>
     <!-- display name -->
-    <td>
-        {{ user.displayName }}
+    <td :style="{ color: user.displayName ? 'black' : 'lightgrey' }">
+        {{ user.displayName || 'Tester' }}
     </td>
 
     <!-- role -->
