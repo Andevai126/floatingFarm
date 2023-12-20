@@ -227,15 +227,3 @@
 		},
 	};
 </script>
-
-<style scoped>
-    /* Custom CSS to hide number input arrows */
-    .no-spinners {
-        -moz-appearance: textfield;
-        appearance: textfield;
-    }
-    .no-spinners::-webkit-inner-spin-button, .no-spinners::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-</style>

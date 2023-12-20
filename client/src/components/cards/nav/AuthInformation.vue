@@ -1,11 +1,11 @@
 <template>
-    <button v-if="!authenticated" v-on:click="signIn" class="btn btn-primary text-dark bg-white">Sign in</button>
+    <button v-if="!authenticated" v-on:click="signIn" class="ff-button">Sign in</button>
     <div v-if="authenticated" class="text-center">
         {{ username }} ({{ roleTitle }})
         &nbsp;
-        <button v-on:click="editProfile" class="btn btn-primary text-dark bg-white">Edit profile</button>
+        <button v-on:click="editProfile" class="ff-button">Edit profile</button>
         &nbsp;
-        <button v-on:click="signOut" class="btn btn-primary text-dark bg-white">Sign out</button>
+        <button v-on:click="signOut" class="ff-button">Sign out</button>
     </div>
 </template>
   

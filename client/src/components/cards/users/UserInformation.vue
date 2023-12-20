@@ -6,7 +6,7 @@
 
     <!-- role -->
     <td>
-        <select v-model="selectedRole">
+        <select v-model="selectedRole" class="form-control">
             <option v-for="role in roles" :key="role.ID" :value="role.ID">
                 {{ role.title }}
             </option>
@@ -15,7 +15,7 @@
 
     <!-- supplier -->
     <td>
-        <select v-model="selectedSupplier">
+        <select v-model="selectedSupplier" class="form-control">
             <option v-for="supplier in suppliers" :key="supplier.ID" :value="supplier.ID">
                 {{ supplier.name }}
             </option>
@@ -34,12 +34,12 @@
     
     <!-- Save / Update -->
     <td>
-        <button @click="updateUser(user.id)">Go</button>
+        <button @click="updateUser(user.id)" class="btn btn-primary text-dark bg-white">Save</button>
     </td>
     
     <!-- Delete -->
     <td>
-        <button @click="deleteUser(user.id)">Go</button>
+        <button @click="deleteUser(user.id)" class="btn btn-primary text-dark bg-white">Delete</button>
     </td>
 </template>
 
@@ -90,3 +90,10 @@
         }
     };
 </script>
+
+<style scoped>
+    td {
+        background-color: rgb(248, 249, 250);
+        vertical-align: middle;
+    }
+</style>

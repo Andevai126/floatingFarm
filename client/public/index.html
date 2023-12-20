@@ -6,8 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="./favicon.ico">
     <title>Portal</title>
+    <style>
+      /* Global */
+      #app {
+        background-color: #F0F5E4;
+        font-family: 'Roboto', sans-serif;
+      }
+
+      /* Standard button in nav */
+      .ff-button {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-bottom: 0.375rem;
+        border-radius: 0.375rem;
+        border: 1px solid #49502D;
+        background-color: #49502D;
+        color: white;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+      }
+      .ff-button:hover {
+        border: 1px solid #94A147;
+        background-color: #94A147;
+      }
+    
+      /* Hide arrows of number input */
+      .no-spinners {
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+      .no-spinners::-webkit-inner-spin-button, .no-spinners::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
   </head>
-  <body>
+  <body style="background-color: #F0F5E4;">
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

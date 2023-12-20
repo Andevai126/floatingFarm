@@ -11,11 +11,11 @@
                 <th scope="col">Assigment to supplier</th>
                 <th scope="col">Present in AD B2C Database</th>
                 <th scope="col">Present in MySQL Database</th>
-                <th scope="col">Save / Update</th>
-                <th scope="col">Delete</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user">
+                <tr v-for="user in users" :key="user" style="border-top: 1px solid #DEE2E6;">
                     <UserInformation :user="user" :roles="roles" :suppliers="suppliers"/>
                 </tr>
             </tbody>
