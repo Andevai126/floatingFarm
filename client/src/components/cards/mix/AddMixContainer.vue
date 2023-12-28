@@ -105,7 +105,7 @@
 
 		<!-- alerts -->
 		<div class="container mb-3">
-			<div v-for="(alert, index) in alerts" :key="index" class="alert fade show " :class="alert.type" role="alert">
+			<div v-for="(alert, index) in alerts" :key="index" class="alert fade show" :class="alert.type" role="alert">
 				<div class="container d-flex align-items-center">
 					<div class="container">
 						<strong>{{ alert.title }}</strong> &nbsp; {{ alert.message }}
@@ -178,22 +178,22 @@
 					// Indicate success to user
 					this.alerts.push({
 						type: 'alert-success',
-						title: 'Success!',
+						title: 'Success',
 						message: 'Your mix has been added.',
 					});
 
-					// Auto hide alert after 4 seconds
+					// Auto hide alert after 10 seconds
 					setTimeout(() => {
 						this.hideAlert(this.alerts.length - 1);
-					}, 4000);
+					}, 10000);
 				})
 				.catch(() => {
 					console.log("Failed to add mix");
 					// Indicate failure to user
 					this.alerts.push({
 						type: 'alert-danger',
-						title: 'Failure!',
-						message: 'Your mix has not been added, refresh the page and try again ;)',
+						title: 'Error',
+						message: 'Your mix has not been added, check your input fields or refresh the page and try again ;)',
 					});
 				});
 			},
