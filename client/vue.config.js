@@ -9,7 +9,11 @@ module.exports = {
   outputDir: path.resolve(__dirname, '../server/public'),
   devServer: {
     proxy: {
+      // These two don't seem to be needed?
       '/api': {
+        target: 'http://localhost:5000'
+      },
+      '/custom': {
         target: 'http://localhost:5000'
       }
     }

@@ -29,12 +29,15 @@ app.use(cors());
 app.use(passport.initialize());
 passport.use(bearerStrategy);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/custom', express.static(path.join(__dirname, 'routes/custom')));
 
 // Routes
 const website = require('./routes/api/website');
 app.use('/api/website', website);
 const ms = require('./routes/api/ms');
 app.use('/api/ms', ms);
+const customPages = require('./routes/customPages');
+app.use('/custom', customPages);
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
