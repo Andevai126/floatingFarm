@@ -1,38 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Product Brand Name</title>
+    <title>Portal - Sign in</title>
+    <!-- Switch if needed between dev and deploy -->
+    <link rel="icon" href="http://localhost:5000/custom/favicon">
+    <!-- <link rel="icon" href="https://floatingfarmfood.azurewebsites.net/custom/favicon"> -->
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        h1 {
-            color: blue;
-            text-align: center;
+        body, html {
+            height: 100%;
         }
-        .intro h2 {
-            text-align: center;
+        .intro, label, .divider {
+            display: none;
         }
-        .entry {
-            width: 400px ;
-            margin-left: auto ;
-            margin-right: auto ;
+        input {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #F0F5E4;
+            background-clip: padding-box;
+            border: none;
+            border-bottom: 1px solid black; /* Set the color of the bottom border */
+            outline: none; /* Remove the default focus outline */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
-        .divider h2 {
-            text-align: center;
+        div.error.itemLevel {
+            /* color: #B00; */
+            color: #FF5959;
         }
-        .create {
-            width: 400px ;
-            margin-left: auto ;
-            margin-right: auto ;
+        p {
+            margin-bottom: 0px;
+        }
+        .entry-item, button, .password-label {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .entry{
+            margin-bottom: 1rem;
+        }
+        #forgotPassword {
+            text-decoration: underline;
+            color: grey;
+        }
+        button {
+            border-radius: 0.375rem;
+            border: 1px solid #49502D;
+            background-color: #49502D;
+            color: white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            width: 100%;
+        }
+        button:hover {
+            border: 1px solid #94A147;
+            background-color: #94A147;
+        }
+        .entry-item {
+            display: flex;
+            flex-direction: column;
+        }
+        #password {
+            order: 1;
+        }
+        .password-label {
+            order: 2;
+        }
+        #createAccount {
+            margin-left: 0.5rem;
+            text-decoration: underline;
+            color: black;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="api"></div>
-    </div>
-    <!-- Switch if needed between dev and deploy -->
-    <img src="http://localhost:5000/custom/cowimage">
-    <!-- <img src="https://floatingfarmfood.azurewebsites.net/custom/cowimage"> -->
-</body>
+    <div class="h-100 row m-0 p-0">
 
+        <!-- left column -->
+        <div class="col-6 d-flex align-items-center justify-content-center" style="background-color: #F0F5E4;">
+            <div id="api" style="width: 60%;"></div>
+        </div>
+
+        <!-- right column -->
+        <div class="col-6 d-flex align-items-center justify-content-center">
+            <!-- Switch if needed between dev and deploy -->
+            <img src="http://localhost:5000/custom/cowimage" width="95%">
+            <!-- <img src="https://floatingfarmfood.azurewebsites.net/custom/cowimage" width="95%"> -->
+        </div>
+
+    </div>
+</body>
 </html>
