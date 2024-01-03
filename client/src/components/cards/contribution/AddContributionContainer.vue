@@ -48,6 +48,14 @@
 			</div>
 		</div>
 
+		<!-- is delivery -->
+		<div class="container mb-3">
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" v-model="isDelivery">
+				Check this box if this contribution will be delivered.
+			</div>
+		</div>
+
 		<!-- choose supplier -->
 		<div v-if="canInputSupplier">
 			<div class="container mb-3">
