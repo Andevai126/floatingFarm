@@ -18,4 +18,14 @@ router.get('/unified', (req, res) => {
     res.sendFile(path.join(__dirname, '/custom/unified.html'));
 });
 
+// Send local sign up page
+router.get('/local', (req, res) => {
+    res.sendFile(path.join(__dirname, '/custom/local.html'));
+});
+
+// Send edit profile page
+router.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, '/custom/profile.html'));
+});
+
 module.exports = router;
