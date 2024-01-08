@@ -4,6 +4,7 @@
     <WelcomePage />
   </div>
   <div v-else>
+
     <div v-if="roleId==1">
       <GuestPage />
     </div>
@@ -19,12 +20,13 @@
     <div v-if="roleId==5">
       <FarmerPage/>
     </div>
-
-    <!-- place for presenter -->
-    
+    <div v-if="roleId==6">
+      <PresenterPage/>
+    </div>
     <div v-if="roleId==7">
       <DriverPage/>
     </div>
+
   </div>
 </template>
 
@@ -39,6 +41,7 @@
   import SupplierPage from './components/pages/SupplierPage.vue';
   import UnpackerPage from './components/pages/UnpackerPage.vue';
   import FarmerPage from './components/pages/FarmerPage.vue';
+  import PresenterPage from './components/pages/PresenterPage.vue';
   import DriverPage from './components/pages/DriverPage.vue';
 
   export default {
@@ -52,6 +55,7 @@
       SupplierPage,
       UnpackerPage,
       FarmerPage,
+      PresenterPage,
       DriverPage
     },
     data() {
