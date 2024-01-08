@@ -3,7 +3,7 @@
 		<div class="container rounded border col-10 pt-3 mb-3 text-center">
 
 			<!-- image -->
-			<img :src="require(`../../../assets/products/${imageId}.png`)" alt="dynamically inserted picture of" class="mb-3" style="width: 75px">
+			<img :src="require(`../../../assets/products/${image}`)" alt="dynamically inserted picture of" class="mb-3" style="width: 75px">
 
 			<!-- title -->
 			<p>{{ this.stockProduct.name }}</p>
@@ -29,7 +29,7 @@
 	import { toRef } from "vue";
 
 	var defaultKilos = null;
-	var defaultImageId = null;
+	var defaultImage = null;
 
 	export default {
 		name: 'ProductInformation',
@@ -61,16 +61,21 @@
 			const stockProduct = toRef(props, 'stockProduct');
 			defaultKilos = stockProduct.value.kilosInStock;
 			try {
-				require(`../../../assets/products/${stockProduct.value.ID}.png`);
-				defaultImageId = stockProduct.value.ID;
+				try {
+					require(`../../../assets/products/${stockProduct.value.ID}.svg`);
+					defaultImage = stockProduct.value.ID + '.svg';
+				} catch (error) {
+					require(`../../../assets/products/${stockProduct.value.ID}.png`);
+					defaultImage = stockProduct.value.ID + '.png';
+				}
 			} catch (error) {
-				defaultImageId = 0;
+				defaultImage = '0.png';
 			}
 		},
 		data() {
 			return {
 				kilos: defaultKilos,
-				imageId: defaultImageId
+				image: defaultImage
 			}
 		}
 	}

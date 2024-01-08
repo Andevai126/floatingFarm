@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Laag_9" data-name="Laag 9" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke: #1d1d1b;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5px;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M35.42,10.89c.43-.33,1.06-.18,1.28,.32,2.35,5.36-2.01,13.48-10.28,18.69-8.27,5.22-17.47,5.67-21.3,1.24-.35-.41-.22-1.05,.26-1.29l11.84-6.04c2.69-1.37,5.25-2.99,7.65-4.83l10.54-8.09Z"/>
+  <circle class="cls-1" cx="14.78" cy="29.68" r="2.54"/>
+  <circle class="cls-1" cx="23.59" cy="25.84" r="2.54"/>
+  <circle class="cls-1" cx="31.03" cy="20.12" r="2.54"/>
+  <path class="cls-1" d="M35.56,10.88c.25-.48,.88-.61,1.29-.26,4.43,3.83,3.97,13.03-1.25,21.3-5.22,8.26-13.34,12.62-18.7,10.27-.49-.22-.65-.85-.32-1.28l8.1-10.54c1.84-2.4,3.46-4.96,4.84-7.65l6.05-11.83Z"/>
+  <circle class="cls-1" cx="24.99" cy="36.71" r="2.54"/>
+  <circle class="cls-1" cx="31.3" cy="29.46" r="2.54"/>
+  <circle class="cls-1" cx="35.57" cy="21.09" r="2.54"/>
+  <path class="cls-1" d="M36.07,10.46s-.49-5.28,4.51-5.28v2.02s-3.25-.09-3.25,3.74c0,0-1.1,.39-1.26-.48Z"/>
+</svg>

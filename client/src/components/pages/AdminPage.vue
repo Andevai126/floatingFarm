@@ -4,9 +4,6 @@
     
     <!-- stock -->
     <StockContainer :canEdit="true"/>
-
-    <!-- design -->
-    <img alt="Admin design" src="../../assets/Admin.png">
 </template>
 
 <script>
