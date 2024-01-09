@@ -13,6 +13,11 @@ router.get('/cowimage', (req, res) => {
     res.sendFile(path.join(__dirname, '/custom/Cow.png'));
 });
 
+// Send js to fix password order
+// router.get('/external', (req, res) => {
+//     res.sendFile(path.join(__dirname, '/custom/external.js'));
+// });
+
 // Send unified sign up or sign in page
 router.get('/unified', (req, res) => {
     res.sendFile(path.join(__dirname, '/custom/unified.html'));
