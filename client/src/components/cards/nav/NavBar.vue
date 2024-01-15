@@ -15,7 +15,7 @@
 			<!-- right side: account info, auth -->
 			<div class="col">
 				<div style="float: right;">
-				<AuthInformation />
+					<AuthInformation />
 				</div>
 			</div>
 

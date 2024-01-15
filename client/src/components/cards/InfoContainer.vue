@@ -41,7 +41,7 @@
 					<div class="d-flex align-items-center">
 						<img alt="Trash picture" src="../../assets/Trash.svg" style="height: 50px;">
 						&nbsp;
-						<h4 style="margin-bottom: 0px;">Verpakking</h4>
+						<h4 style="margin-bottom: 0px;">Afval</h4>
 					</div>
 					<hr>
 					<p>Zorg ervoor dat er geen afval of ongeschikte materialen tussen het voedsel aanwezig zijn, om de gezondheid van onze dieren te waarborgen.</p>
