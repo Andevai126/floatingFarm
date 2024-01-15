@@ -198,7 +198,7 @@ router.post('/updateUser', passport.authenticate('oauth-bearer', { session: fals
             // Check if all given values are ok
             const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
             const idOk = req.body.hasOwnProperty('id') && regex.test(req.body.id);
-            const roleOk = req.body.hasOwnProperty('role') && (req.body.role === null || typeof req.body.role === 'number');
+            const roleOk = req.body.hasOwnProperty('role') && typeof req.body.role === 'number';
             const supplierOk = req.body.hasOwnProperty('supplier') && (req.body.supplier === null || typeof req.body.supplier === 'number');
             // If not, send code bad request
             if (!idOk || !roleOk || !supplierOk) {
