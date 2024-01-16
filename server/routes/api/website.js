@@ -171,7 +171,7 @@ router.get('/getRoles', passport.authenticate('oauth-bearer', { session: false }
 // Get a list of suppliers
 router.get('/getSuppliers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Admin role
+        // Check for Admin or Driver role
         validRole(req.authInfo['oid'], [2, 7]).then(() => {
             query(
                 `SELECT suppliers.ID, suppliers.name FROM suppliers;`,
@@ -280,7 +280,7 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
 // Get a list of products
 router.get('/getProducts', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Supplier or Farmer role
+        // Check for Supplier or Farmer or Driver role
         validRole(req.authInfo['oid'], [3, 5, 7]).then(() => {
             query(
                 `SELECT products.ID, products.name FROM products;`,
@@ -425,7 +425,7 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
 // Get a list of containers
 router.get('/getContainers', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Supplier role
+        // Check for Supplier or Driver role
         validRole(req.authInfo['oid'], [3, 7]).then(() => {
             query(
                 `SELECT containers.ID, containers.name, containers.litres FROM containers;`,
@@ -510,13 +510,13 @@ function addContribution(supplierId, currentDateTime, dateTime, isDelivery, note
 // Add contribution with products in contribution
 router.post('/addContribution', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Supplier and Driver role
+        // Check for Supplier or Driver role
         validRole(req.authInfo['oid'], [3, 7]).then((roleId) => {
             // Check if all given values are ok
             const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
             const dateTimeOk = req.body.hasOwnProperty('dateTime') && regex.test(req.body.dateTime);
             const isDeliveryOk = req.body.hasOwnProperty('isDelivery') && (req.body.isDelivery === true || req.body.isDelivery === false);
-            const isSupplierIdOk = req.body.hasOwnProperty('supplierId') && ( (roleId === 7) ? (typeof req.body.supplierId === 'number' && req.body.supplierId > 0) : req.body.supplierId === null );
+            const supplierIdOk = req.body.hasOwnProperty('supplierId') && ( (roleId === 7) ? (typeof req.body.supplierId === 'number' && req.body.supplierId > 0) : req.body.supplierId === null );
             const notesOk = req.body.hasOwnProperty('notes') && (req.body.notes.length < 256 || req.body.notes === null);
             var productsInContributionOk = req.body.hasOwnProperty('productsInContribution') && req.body.productsInContribution !== null;
             var allProductsInContributionEmpty = true;
@@ -546,7 +546,7 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
                 productsInContributionOk = false;
             }
             // If not, send code bad request
-            if (!dateTimeOk || !isDeliveryOk || !isSupplierIdOk || !notesOk || !productsInContributionOk) {
+            if (!dateTimeOk || !isDeliveryOk || !supplierIdOk || !notesOk || !productsInContributionOk) {
                 console.log("body: ", req.body);
                 res.status(400).send();
             } else {
@@ -591,7 +591,7 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
 // Get products currently present on quay
 router.get('/getStock', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Admin, Supplier and Farmer role
+        // Check for Admin or Supplier or Farmer role
         validRole(req.authInfo['oid'], [2, 3, 5]).then(() => {
             query(
                 `SELECT products.ID, products.name, products.kilosInStock FROM products;`,
@@ -613,7 +613,7 @@ router.get('/getStock', passport.authenticate('oauth-bearer', { session: false }
 // Update products currently present on quay
 router.post('/updateStock', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Admin and Farmer role
+        // Check for Admin or Farmer role
         validRole(req.authInfo['oid'], [2, 5]).then(() => {
             // Check if all given values are ok
             var stockProductsOk = req.body.hasOwnProperty('stockProducts') && req.body.stockProducts !== null;
