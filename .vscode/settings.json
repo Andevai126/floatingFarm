@@ -3,7 +3,8 @@
         // "node_modules{,/**}",
         ".vscode{,/**}",
         "client{,/**}",
-        "notes.txt"
+        "notes.txt",
+        "server/public/js/*.map"
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/a319b550-2d05-43fe-8d17-7da6de3eb9cb/resourceGroups/food-streams-sep/providers/Microsoft.Web/sites/floatingfarmfood",
     // "appService.defaultWebAppToDeploy": "/subscriptions/3e23fde4-213f-4200-99e8-cd7c46322bdd/resourceGroups/resourcegroupzelf/providers/Microsoft.Web/sites/webappzelf",
