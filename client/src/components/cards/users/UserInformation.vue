@@ -22,14 +22,14 @@
         </select>
     </td>
 
-    <!-- Present in AD B2C Database -->
-    <td :class="{ 'bg-success': user.isInAzure, 'bg-warning': !user.isInAzure }">
-        {{ user.isInAzure }}
+    <!-- Present in B2C Database -->
+    <td :class="{ 'bg-success': user.isInB, 'bg-warning': !user.isInB }">
+        {{ user.isInB }}
     </td>
 
     <!-- Present in MySQL Database -->
-    <td :class="{ 'bg-success': user.isInDatabase, 'bg-warning': !user.isInDatabase }">
-        {{ user.isInDatabase }}
+    <td :class="{ 'bg-success': user.isInM, 'bg-warning': !user.isInM }">
+        {{ user.isInM }}
     </td>
     
     <!-- Update user -->

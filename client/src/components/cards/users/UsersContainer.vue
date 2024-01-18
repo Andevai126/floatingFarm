@@ -10,7 +10,7 @@
                 <th scope="col">Display name</th>
                 <th scope="col">Role</th>
                 <th scope="col">Assigment to supplier</th>
-                <th scope="col">Present in AD B2C Database</th>
+                <th scope="col">Present in B2C Database</th>
                 <th scope="col">Present in MySQL Database</th>
                 <th scope="col"></th>
                 <th scope="col"></th>

@@ -93,8 +93,8 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
                 [],
                 async (results, fields) => {
                     if (results){
-                        // Retrieve users from database
-                        const databaseUsers = results;
+                        // Retrieve users from MySQL Database
+                        const mUsers = results;
 
                         // Get access token
                         const response = await axios.post(
@@ -107,29 +107,29 @@ router.get('/getUsers', passport.authenticate('oauth-bearer', { session: false }
                             }).toString()
                         );
 
-                        // Retrieve users from Azure
+                        // Retrieve users from B2C Database
                         const secondResponse = await axios.get(
                             "https://graph.microsoft.com/v1.0/users",
                             { headers: { 'Authorization': `Bearer ${response.data.access_token}`} }
                         );
-                        const azureUsers = secondResponse.data.value;
+                        const bUsers = secondResponse.data.value;
                         
                         // Make array of unique id's, combining the two sets of users
-                        const uniqueIDs = [...new Set(databaseUsers.map(item => item.id).concat(azureUsers.map(item => item.id)))]
+                        const uniqueIDs = [...new Set(mUsers.map(item => item.id).concat(bUsers.map(item => item.id)))]
 
                         // Add as much available information as possible from the two sets of users
                         const combinedUsers = uniqueIDs.map(uniqueID => {
-                            const databaseItem = databaseUsers.find(item => item.id === uniqueID);
-                            const azureItem = azureUsers.find(item => item.id === uniqueID);
+                            const mItem = mUsers.find(item => item.id === uniqueID);
+                            const bItem = bUsers.find(item => item.id === uniqueID);
                             return {
-                                id: uniqueID,
-                                displayName: azureItem ? azureItem.displayName : null,
-                                roleID: databaseItem ? databaseItem.roleID : null,
-                                roleTitle: databaseItem ? databaseItem.roleTitle : null,
-                                supplierID: databaseItem ? databaseItem.supplierID : null,
-                                supplierName: databaseItem ? databaseItem.supplierName : null,
-                                isInAzure: !!azureItem,
-                                isInDatabase: !!databaseItem
+                                id:           uniqueID,
+                                displayName:  bItem ? bItem.displayName : null,
+                                roleID:       mItem ? mItem.roleID : null,
+                                roleTitle:    mItem ? mItem.roleTitle : null,
+                                supplierID:   mItem ? mItem.supplierID : null,
+                                supplierName: mItem ? mItem.supplierName : null,
+                                isInB:        !!bItem,
+                                isInM:        !!mItem
                             };
                         });
                         
