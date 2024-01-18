@@ -3,13 +3,13 @@
         <div class="container rounded border col col-6 pt-3 mb-3">
             <p>Product</p>
 
-            <!-- input product name -->
+            <!-- Input product name -->
             <div class="input-group mb-3">
                 <label class="input-group-text">Name</label>
                 <input type="text" v-model="name" @input="nameChanged" class="form-control">
             </div>
 
-            <!-- input product name suggestions -->
+            <!-- Input product name suggestions -->
             <div v-if="suggestions.length > 0">
                 <div v-for="suggestion in suggestions" :key="suggestion.id" @click="suggestionSelected(suggestion)">
                     {{ suggestion.name }} <br>
@@ -18,19 +18,19 @@
 
             <p>Volume</p>
             
-            <!-- input quantity -->
+            <!-- Input quantity -->
             <div class="input-group mb-3">
                 <label class="input-group-text">Quantity</label>
                 <input type="number" v-model="quantity" @input="quantityChanged" class="form-control no-spinners">
             </div>
 
-            <!-- input container name -->
+            <!-- Input container name -->
             <div class="input-group mb-3">
                 <label class="input-group-text">Unit</label>
                 <input type="text" v-model="containerName" @input="containerNameChanged" class="form-control">
             </div>
 
-            <!-- input container name suggestions -->
+            <!-- Input container name suggestions -->
             <div v-if="containerSuggestions.length > 0">
                 <div v-for="containerSuggestion in containerSuggestions" :key="containerSuggestion.id" @click="containerSuggestionSelected(containerSuggestion)">
                     {{ containerSuggestion.name }} ({{ containerSuggestion.litres }} liter)<br>
@@ -46,6 +46,7 @@
         name: 'ExtraProduct',
         emits: ['updateExtraProductEvent'],
         methods: {
+            // Everytime the product name is changed
             nameChanged() {
                 const inputName = this.name.toLowerCase();
 
@@ -75,6 +76,7 @@
                     this.updateExtraProduct();
                 }
             },
+            // A suggestion is clicked
             suggestionSelected(suggestion) {
                 this.name = suggestion.name;
                 this.id = suggestion.ID;
@@ -84,6 +86,7 @@
             quantityChanged() {
                 this.updateExtraProduct();
             },
+            // Everytime the container name is changed
             containerNameChanged() {
                 const inputName = this.containerName.toLowerCase();
 
@@ -113,6 +116,7 @@
                     this.updateExtraProduct();
                 }
             },
+            // A suggestion is clicked
             containerSuggestionSelected(containerSuggestion) {
                 this.containerName = containerSuggestion.name;
                 this.containerId = containerSuggestion.ID;
@@ -120,7 +124,7 @@
                 this.updateExtraProduct();
             },
             updateExtraProduct() {
-                // check for extra spaces in this.name ?
+                // If the quantity input is not a number, send zero instead
                 const quantity = (typeof this.quantity === 'number') ? this.quantity : 0;
                 this.$emit('updateExtraProductEvent', {index: this.index, id: this.id, name: this.name, quantity: quantity, containerId: this.containerId, containerName: this.containerName});
             }
@@ -144,10 +148,8 @@
                 suggestions: [],
                 id: null,
                 name: '',
-
                 quantity: 0,
-                
-                containerSuggestions: [], // show all options instead?
+                containerSuggestions: [],
                 containerId: null,
                 containerName: '',
             }

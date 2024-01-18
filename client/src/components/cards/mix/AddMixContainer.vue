@@ -4,10 +4,10 @@
 		<h4>Products</h4>
 		<hr>
 
-		<!-- 4 preset products -->
+		<!-- 4 Preset products -->
 		<div class="container mb-3">
 			<div class="row">
-				<!-- gras -->
+				<!-- Gras -->
 				<div class="col">
 					<p>Gras</p>
 					<div class="input-group mb-3">
@@ -16,7 +16,7 @@
 					</div>
 				</div>
 
-				<!-- bierbostel -->
+				<!-- Bierbostel -->
 				<div class="col">
 					<p >Bierbostel</p>
 					<div class="input-group mb-3">
@@ -25,10 +25,10 @@
 					</div>
 				</div>
 
-				<!-- second row -->
+				<!-- Second row -->
 				<div class="w-100"></div>
 
-				<!-- proticorn -->
+				<!-- Proticorn -->
 				<div class="col">
 					<p>DDGS Proticorn</p>
 					<div class="input-group mb-3">
@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				
-				<!-- sinaasappelschillen -->
+				<!-- Sinaasappelschillen -->
 				<div class="col">
 					<p>Sinaasappelschillen</p>
 					<div class="input-group mb-3">
@@ -48,7 +48,7 @@
 			</div>
 		</div>
 
-		<!-- extra product inputs -->
+		<!-- Extra product inputs -->
 		<div v-for="(extraProduct, index) in extraProductsInMix" :key="index">
 			<ExtraProduct
 				:products="products"
@@ -58,7 +58,7 @@
 			<br />
 		</div>
 
-		<!-- extra products button -->
+		<!-- Extra products button -->
 		<div class="row justify-content-center">
 			<button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
 		</div>
@@ -66,7 +66,7 @@
 		<h4>Date and Time</h4>
 		<hr>
 
-		<!-- date and time -->
+		<!-- Date and time -->
 		<div class="container mb-3">
 			<div class="row">
 				<div class="col">
@@ -87,7 +87,7 @@
 		<h4>Notes</h4>
 		<hr>
 
-		<!-- notes -->
+		<!-- Notes -->
 		<div class="container mb-3">
 			<textarea
 				v-model="notes"
@@ -98,12 +98,12 @@
 			></textarea>
 		</div>
     
-		<!-- send -->
+		<!-- Send mix -->
 		<div class="row justify-content-center mb-3">
 			<button @click="addMix" class="btn btn-primary text-dark bg-white col col-3">Save</button>
 		</div>
 
-		<!-- alerts -->
+		<!-- Alerts -->
 		<div class="container mb-3">
 			<div v-for="(alert, index) in alerts" :key="index" class="alert fade show" :class="alert.type" role="alert">
 				<div class="container d-flex align-items-center">
@@ -136,20 +136,24 @@
 		ExtraProduct
 		},
 		methods: {
+			// Test function, logs all products that have been added
 			logExtraProducts() {
 				this.extraProductsInMix.forEach((product) => {
 					console.log(product.id, product.name, product.kilos);
 				});
 			},
+			// Adds empty extra product
 			addExtraProduct() {
 				this.extraProductsInMix.push({id: null, name: '', kilos: 0 });
 				this.logExtraProducts();
 			},
+			// When the ExtraProduct.vue container values change, the array is updated
 			handleExtraProduct(extraProduct) {
 				this.extraProductsInMix[extraProduct.index] = { id: extraProduct.id, name: extraProduct.name, kilos: extraProduct.kilos };
 				this.logExtraProducts();
 			},
 			addMix() {
+				// Get preset products, and values, instead of references or objects
 				var productsInMix = [
 					{ id: 1, name: 'Gras', kilos: this.kilosGras },
 					{ id: 2, name: 'Bierbostel', kilos: this.kilosBierbostel },
@@ -197,16 +201,18 @@
 					});
 				});
 			},
+			// Remove the alert at the specified index
 			hideAlert(index) {
-				// Remove the alert at the specified index
 				this.alerts.splice(index, 1);
 			}
 		},
 		setup() {
+			// Set a default for the products value in return data
 			getProducts().then((products) => {
 				console.log("retrieved products: ", products);
 				listOfProducts.value = products;
 			});
+			// Set a default for the suppliers value in return data
 			const newDate = new Date();
 			currentDate.value = newDate.toISOString().slice(0, 10);
 			currentTime.value = newDate.toTimeString().slice(0, 5);

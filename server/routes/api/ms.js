@@ -26,6 +26,8 @@ router.post('/getRoles', (req, res) => {
     }
 });
 
+// Work in progress
+
 // Add Post
 // router.post('/', (req, res) => {
 //     query('INSERT INTO inventory (name, quantity) VALUES (?,?);', ['test', 7], (results, fields) => {

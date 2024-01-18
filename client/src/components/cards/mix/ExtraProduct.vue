@@ -2,20 +2,20 @@
     <div class="row justify-content-md-center">
         <div class="container rounded border col col-6 pt-3 mb-3">
             <p>Extra Product</p>
-            <!-- input product name -->
+            <!-- Input product name -->
             <div class="input-group mb-3">
                 <label class="input-group-text">Name</label>
                 <input type="text" v-model="name" @input="nameChanged" class="form-control">
             </div>
 
-            <!-- input product name suggestions -->
+            <!-- Input product name suggestions -->
             <div v-if="suggestions.length > 0">
                 <div v-for="suggestion in suggestions" :key="suggestion.id" @click="suggestionSelected(suggestion)">
                     {{ suggestion.name }} <br>
                 </div>
             </div>
         
-            <!-- input weight -->
+            <!-- Input weight -->
             <div class="input-group mb-3">
                 <input type="number" v-model="kilos" @input="kilosChanged" class="form-control no-spinners">
                 <label class="input-group-text">Kilo</label>
@@ -29,6 +29,7 @@
         name: 'ExtraProduct',
         emits: ['updateExtraProductEvent'],
         methods: {
+            // Everytime the product name is changed
             nameChanged() {
                 const inputName = this.name.toLowerCase();
 
@@ -58,6 +59,7 @@
                     this.updateExtraProduct();
                 }
             },
+            // A suggestion is clicked
             suggestionSelected(suggestion) {
                 this.name = suggestion.name;
                 this.id = suggestion.ID;
@@ -68,6 +70,7 @@
                 this.updateExtraProduct();
             },
             updateExtraProduct() {
+                // If the kilos input is not a number, send zero instead
                 const kilos = (typeof this.kilos === 'number') ? this.kilos : 0;
                 this.$emit('updateExtraProductEvent', {index: this.index, id: this.id, name: this.name, kilos: kilos});
             }

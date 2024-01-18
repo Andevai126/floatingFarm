@@ -1,12 +1,14 @@
 <template>
     <div class="row g-0">
-        <!-- left column -->
+        <!-- Left column -->
         <div class="col p-2">
+            <!-- Add contribution -->
             <AddContribution :canInputSupplier="false"/>
         </div>
 
-        <!-- right column -->
+        <!-- Right column -->
         <div class="col p-2">
+            <!-- Stock -->
             <StockContainer :canEdit="false"/>
             <InfoContainer />
         </div>

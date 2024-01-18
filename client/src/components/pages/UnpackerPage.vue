@@ -1,5 +1,5 @@
 <template>
-	<p>This is the UnpackerCard component</p>
+	<!-- Work in progress -->
 	<img alt="Unpacker design" src="../../assets/Unpacker.png">
 </template>
   

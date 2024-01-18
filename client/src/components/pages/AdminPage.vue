@@ -1,8 +1,8 @@
 <template>
-    <!-- users -->
+    <!-- Users -->
     <UsersContainer />
     
-    <!-- stock -->
+    <!-- Stock -->
     <StockContainer :canEdit="true"/>
 </template>
 

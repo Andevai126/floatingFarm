@@ -1,8 +1,9 @@
 import { store } from './store';
-import { b2cScopes, b2cPolicies, setAccount, authenticateAccount, clearCredentials, getTokenPopup } from './msalConfig';
+import { b2cScopes, b2cPolicies, setAccount, authenticateAccount, clearCredentials, getTokenRedirect } from './msalConfig';
 const axios = require('axios');
 const env = require('./../environment');
 
+// Redirect user to signIn page, retrieve and save accessToken
 export function signIn() {
   (store.msalInstance).loginRedirect({
     scopes: b2cScopes,
@@ -12,6 +13,7 @@ export function signIn() {
   });
 }
 
+// Redirect user to signOut page, remove all stored personal information
 export function signOut() {
   (store.msalInstance).logoutRedirect({
     account: (store.msalInstance).getAccountByHomeId(store.accountId)
@@ -22,6 +24,7 @@ export function signOut() {
   });
 }
 
+// Redirect user to editProfile page, update username
 export function editProfile() {
   (store.msalInstance).loginRedirect({
     authority: b2cPolicies.authorities.editProfile.authority
@@ -33,6 +36,7 @@ export function editProfile() {
   });
 }
 
+// Call a GET endpoint and return a promise
 function simpleGetApi(endpoint, accessToken) {
   return new Promise((resolve, reject) => {
     axios.get(endpoint, {
@@ -45,6 +49,7 @@ function simpleGetApi(endpoint, accessToken) {
   });
 }
 
+// Call a POST endpoint and return a promise
 function simplePostApi(endpoint, accessToken, body) {
   return new Promise((resolve, reject) => {
     axios.post(endpoint, body, {
@@ -59,6 +64,7 @@ function simplePostApi(endpoint, accessToken, body) {
   });
 }
 
+// Retrieve users
 export async function getUsers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -66,7 +72,7 @@ export async function getUsers() {
       resolve(users);
     // Try with acquired access token
     }).catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simpleGetApi(env.apiBase + "/api/website/getUsers", store.accessToken).then((users) => {
         resolve(users);
       }).catch((error) => {
@@ -77,6 +83,7 @@ export async function getUsers() {
   });
 }
 
+// Retrieve roles
 export async function getRoles() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -84,7 +91,7 @@ export async function getRoles() {
       resolve(roles);
     // Try with acquired access token
     }).catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simpleGetApi(env.apiBase + "/api/website/getRoles", store.accessToken).then((roles) => {
         resolve(roles);
       }).catch((error) => {
@@ -95,6 +102,7 @@ export async function getRoles() {
   });
 }
 
+// Retrieve suppliers
 export async function getSuppliers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -102,7 +110,7 @@ export async function getSuppliers() {
       resolve(suppliers);
     // Try with acquired access token
     }).catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simpleGetApi(env.apiBase + "/api/website/getSuppliers", store.accessToken).then((suppliers) => {
         resolve(suppliers);
       }).catch((error) => {
@@ -113,12 +121,13 @@ export async function getSuppliers() {
   });
 }
 
+// Update a specified user
 export async function updateUser(id, role, supplier) {
   // Try with stored access token
   simplePostApi(env.apiBase + "/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
   // Try with acquired access token
   .catch(async () => {
-    await getTokenPopup();
+    await getTokenRedirect();
     simplePostApi(env.apiBase + "/api/website/updateUser", store.accessToken, {id: id, role: role, supplier: supplier})
     .catch((error) => {
       console.log("Failed to update user: ", error);
@@ -126,12 +135,13 @@ export async function updateUser(id, role, supplier) {
   });
 }
 
+// Delete a specified user
 export function deleteUser(id) {
   // Try with stored access token
   simplePostApi(env.apiBase + "/api/website/deleteUser", store.accessToken, {id: id})
   // Try with acquired access token
   .catch(async () => {
-    await getTokenPopup();
+    await getTokenRedirect();
     simplePostApi(env.apiBase + "/api/website/deleteUser", store.accessToken, {id: id})
     .catch((error) => {
       console.error("Failed to delete user: ", error);
@@ -139,6 +149,7 @@ export function deleteUser(id) {
   });
 }
 
+// Retrieve products
 export function getProducts() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -146,7 +157,7 @@ export function getProducts() {
       resolve(products);
     // Try with acquired access token
     }).catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simpleGetApi(env.apiBase + "/api/website/getProducts", store.accessToken).then((products) => {
         resolve(products);
       }).catch((error) => {
@@ -157,6 +168,7 @@ export function getProducts() {
   });
 }
 
+// Add a mix
 export function addMix(productsInMix, dateTime, notes) {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -166,7 +178,7 @@ export function addMix(productsInMix, dateTime, notes) {
     })
     // Try with acquired access token
     .catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simplePostApi(env.apiBase + "/api/website/addMix", store.accessToken, {productsInMix: productsInMix, dateTime: dateTime, notes: notes})
       .then(() => {
         resolve();
@@ -179,6 +191,7 @@ export function addMix(productsInMix, dateTime, notes) {
   });
 }
 
+// Retrieve containers
 export function getContainers() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -186,7 +199,7 @@ export function getContainers() {
       resolve(containers);
     // Try with acquired access token
     }).catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simpleGetApi(env.apiBase + "/api/website/getContainers", store.accessToken).then((containers) => {
         resolve(containers);
       }).catch((error) => {
@@ -197,6 +210,7 @@ export function getContainers() {
   });
 }
 
+// Add a contribution
 export function addContribution(productsInContribution, dateTime, isDelivery, supplierId, notes) {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -206,7 +220,7 @@ export function addContribution(productsInContribution, dateTime, isDelivery, su
     })
     // Try with acquired access token
     .catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simplePostApi(env.apiBase + "/api/website/addContribution", store.accessToken, {productsInContribution: productsInContribution, dateTime: dateTime, isDelivery: isDelivery, supplierId: supplierId, notes: notes})
       .then(() => {
         resolve();
@@ -219,6 +233,7 @@ export function addContribution(productsInContribution, dateTime, isDelivery, su
   });
 }
 
+// Retrieve stock
 export function getStock() {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -226,7 +241,7 @@ export function getStock() {
       resolve(stock);
     // Try with acquired access token
     }).catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simpleGetApi(env.apiBase + "/api/website/getStock", store.accessToken).then((stock) => {
         resolve(stock);
       }).catch((error) => {
@@ -237,6 +252,7 @@ export function getStock() {
   });
 }
 
+// Update the stock
 export function updateStock(stockProducts) {
   return new Promise((resolve, reject) => {
     // Try with stored access token
@@ -246,7 +262,7 @@ export function updateStock(stockProducts) {
     })
     // Try with acquired access token
     .catch(async () => {
-      await getTokenPopup();
+      await getTokenRedirect();
       simplePostApi(env.apiBase + "/api/website/updateStock", store.accessToken, {stockProducts: stockProducts})
       .then(() => {
         resolve();

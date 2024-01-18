@@ -1,10 +1,11 @@
 <template>
+  <!-- The navigation bar is always visible -->
   <NavBar />
   <div v-if="!authenticated">
     <WelcomePage />
   </div>
   <div v-else>
-
+    
     <div v-if="roleId==1">
       <GuestPage />
     </div>
@@ -23,6 +24,7 @@
     <div v-if="roleId==6">
       <PresenterPage/>
     </div>
+    <!-- Note that a v-else is not used for integrity -->
     <div v-if="roleId==7">
       <DriverPage/>
     </div>

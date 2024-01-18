@@ -3,7 +3,7 @@
 		<h4>Products</h4>
 		<hr>
 
-		<!-- product inputs -->
+		<!-- Product inputs -->
 		<div v-for="(extraProduct, index) in extraProductsInContribution" :key="index">
 			<ExtraProduct
 				:products="products"
@@ -14,7 +14,7 @@
 			<br />
 		</div>
 
-		<!-- products button -->
+		<!-- Products button -->
 		<div class="row justify-content-center mb-3">
 			<button @click="addExtraProduct" class="btn btn-primary text-dark bg-white col col-3">Add Product</button>
 		</div>
@@ -22,7 +22,7 @@
 		<h4>Logistics of Transport</h4>
 		<hr>
 
-		<!-- date and time -->
+		<!-- Date and time -->
 		<div class="container mb-3">
 			<div class="row">
 				<div class="col">
@@ -40,7 +40,7 @@
 			</div>
 		</div>
 
-		<!-- is delivery -->
+		<!-- IsDelivery -->
 		<div class="container mb-3">
 			<div class="form-check form-switch">
 				<input class="form-check-input" type="checkbox" role="switch" v-model="isDelivery">
@@ -48,7 +48,7 @@
 			</div>
 		</div>
 
-		<!-- is delivery -->
+		<!-- Isdelivery -->
 		<div class="container mb-3">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" v-model="isDelivery">
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 
-		<!-- choose supplier -->
+		<!-- Choose supplier -->
 		<div v-if="canInputSupplier">
 			<div class="container mb-3">
 				<div class="input-group mb-3">
@@ -73,7 +73,7 @@
 		<h4>Notes</h4>
 		<hr>
 
-		<!-- notes -->
+		<!-- Notes -->
 		<div class="container mb-3">
 			<textarea
 				v-model="notes"
@@ -84,12 +84,12 @@
 			></textarea>
 		</div>
 
-		<!-- send -->
+		<!-- Send Contribution -->
 		<div class="row justify-content-center mb-3">
 			<button @click="addContribution" class="btn btn-primary text-dark bg-white col col-3">Save</button>
 		</div>
 
-		<!-- alerts -->
+		<!-- Alerts -->
 		<div class="container mb-3">
 			<div v-for="(alert, index) in alerts" :key="index" class="alert fade show" :class="alert.type" role="alert">
 				<div class="container d-flex align-items-center">
@@ -123,20 +123,24 @@
 			ExtraProduct,
 		},
 		methods: {
+			// Test function, logs all products that have been added
 			logExtraProducts() {
 				this.extraProductsInContribution.forEach((product) => {
 					console.log(product.id, product.name, product.quantity, product.containerId, product.containerName);
 				});
 				console.log("canInputSupplier: ", this.canInputSupplier);
 			},
+			// Adds empty extra product
 			addExtraProduct() {
 				this.extraProductsInContribution.push({ id: null, name: '', quantity: 0, containerId: null, containerName: '' });
 			},
+			// When the ExtraProduct.vue container values change, the array is updated
 			handleExtraProduct(extraProduct) {
 				this.extraProductsInContribution[extraProduct.index] = { id: extraProduct.id, name: extraProduct.name, quantity: extraProduct.quantity, containerId: extraProduct.containerId, containerName: extraProduct.containerName };
 				this.logExtraProducts();
 			},
 			addContribution() {
+				// Get values, instead of references or objects
 				var productsInContribution = [
 					...this.extraProductsInContribution.map(p => ({id: p.id, name: p.name, quantity: p.quantity, containerId: p.containerId, containerName: p.containerName}))
 				];
@@ -178,8 +182,8 @@
 					});
 				});
 			},
+			// Remove the alert at the specified index
 			hideAlert(index) {
-				// Remove the alert at the specified index
 				this.alerts.splice(index, 1);
 			}
 		},
@@ -190,14 +194,17 @@
             }
         },
 		setup(props) {
+			// Set a default for the products value in return data
 			getProducts().then((products) => {
 				console.log("retrieved products: ", products);
 				listOfProducts.value = products;
 			});
+			// Set a default for the containers value in return data
 			getContainers().then((containers) => {
 				console.log("retrieved containers: ", containers);
 				listOfContainers.value = containers;
 			});
+			// Set a default for the suppliers value in return data
 			const canInputSupplierObject = toRef(props, 'canInputSupplier');
             const canInputSupplier = canInputSupplierObject.value;
             if (canInputSupplier) {
@@ -205,6 +212,7 @@
 					listOfSuppliers.value = suppliers;
 				});
 			}
+			// Set a default for the date and time values in return data
 			const newDate = new Date();
 			currentDate.value = newDate.toISOString().slice(0, 10);
 			currentTime.value = newDate.toTimeString().slice(0, 5);
@@ -215,6 +223,7 @@
 				containers: listOfContainers,
 				suppliers: listOfSuppliers,
 				selectedSupplier: null,
+				// Set a default for the array so that one empty product is displayed
 				extraProductsInContribution: [{ id: null, name: '', quantity: 0, containerId: null, containerName: '' }],
 				date: currentDate,
 				time: currentTime,

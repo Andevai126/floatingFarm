@@ -16,7 +16,7 @@ module.exports = {
     },
     "settings": {
         "isB2C": true,
-        "validateIssuer": false, // in production, set to true
+        "validateIssuer": false, // Set to true when deploying
         "passReqToCallback": false,
         "loggingLevel": "info"
     }

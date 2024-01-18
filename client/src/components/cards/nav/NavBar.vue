@@ -2,17 +2,17 @@
 	<header>
 		<nav class="navbar bg-light shadow row p-3 g-0">
 
-			<!-- left side: logo -->
+			<!-- Left side: FF Logo -->
 			<div class="col">
 				<img alt="logo FF black on transparent" src="../../../assets/logoBlackOnTransparent.png" style="height: 50px;">
 			</div>
 
-			<!-- center: possible nav stuff -->
+			<!-- Center: Space for navigation -->
 			<div class="col text-center">
 				Possible | Navigation | Buttons
 			</div>
 
-			<!-- right side: account info, auth -->
+			<!-- Right side: Account info and Auth -->
 			<div class="col">
 				<div style="float: right;">
 					<AuthInformation />

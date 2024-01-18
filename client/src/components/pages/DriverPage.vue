@@ -1,4 +1,5 @@
 <template>
+    <!-- Add contribution -->
     <AddContribution :canInputSupplier="true"/>
 </template>
     

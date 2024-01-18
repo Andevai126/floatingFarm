@@ -2,12 +2,8 @@
 <html>
 <head>
     <title>Portal - Sign in</title>
-    <!-- Switch if needed between dev and deploy -->
-    <!-- <link rel="icon" href="http://localhost:5000/custom/favicon"> -->
     <link rel="icon" href="https://floatingfarmfood.azurewebsites.net/custom/favicon">
-    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- <script src="http://localhost:5000/custom/external/" defer></script> -->
     <style>
         body, html {
             height: 100%;
@@ -25,12 +21,11 @@
             background-color: #F0F5E4;
             background-clip: padding-box;
             border: none;
-            border-bottom: 1px solid black; /* Set the color of the bottom border */
-            outline: none; /* Remove the default focus outline */
+            border-bottom: 1px solid black;
+            outline: none;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
         div.error.itemLevel {
-            /* color: #B00; */
             color: #FF5959;
         }
         p {
@@ -79,15 +74,14 @@
 <body>
     <div class="h-100 row m-0 p-0">
 
-        <!-- left column -->
+        <!-- Left column -->
         <div class="col-6 d-flex align-items-center justify-content-center" style="background-color: #F0F5E4;">
+            <!-- Injection point -->
             <div id="api" style="width: 60%;"></div>
         </div>
 
-        <!-- right column -->
+        <!-- Right column -->
         <div class="col-6 d-flex align-items-center justify-content-center">
-            <!-- Switch if needed between dev and deploy -->
-            <!-- <img src="http://localhost:5000/custom/cowimage" width="95%"> -->
             <img src="https://floatingfarmfood.azurewebsites.net/custom/cowimage" width="95%">
         </div>
 

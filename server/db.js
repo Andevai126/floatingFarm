@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const fs = require('fs');
 
+// Setup database connection
 var config = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -12,8 +13,10 @@ var config = {
 };
 
 function getConn() {
+  // Create new connection
   var conn = new mysql.createConnection(config);
 
+  // Connect
   conn.connect(function (err) { 
     if (err) {
       console.log("!!! Cannot connect !!! Error:");
@@ -23,6 +26,7 @@ function getConn() {
     }
   });
 
+  // Return connection
   return conn;
 }
 

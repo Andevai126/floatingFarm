@@ -5,6 +5,7 @@
         <hr>
 
         <table class="table">
+            <!-- First row or head -->
             <thead>
                 <th scope="col">Display name</th>
                 <th scope="col">Role</th>
@@ -14,6 +15,8 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
             </thead>
+
+            <!-- Other rows -->
             <tbody>
                 <tr v-for="user in users" :key="user" style="border-top: 1px solid #DEE2E6;">
                     <UserInformation :user="user" :roles="roles" :suppliers="suppliers"/>
@@ -39,16 +42,16 @@
             UserInformation,
         },
         setup() {
+            // Set a default for the users value in return data
             getUsers().then((users) => {
-                // console.log("retrieved users: ", users);
                 listOfUsers.value = users;
             });
+            // Set a default for the roles value in return data
             getRoles().then((roles) => {
-                // console.log("retrieved roles: ", roles);
                 listOfRoles.value = roles;
             });
+            // Set a default for the suppliers value in return data
             getSuppliers().then((suppliers) => {
-                // console.log("retrieved suppliers: ", suppliers);
                 listOfSuppliers.value = suppliers;
             });
         },

@@ -1,10 +1,10 @@
 <template>
-    <!-- display name -->
+    <!-- Display name -->
     <td :style="{ color: user.displayName ? 'black' : 'lightgrey' }">
         {{ user.displayName || 'Tester' }}
     </td>
 
-    <!-- role -->
+    <!-- Input role -->
     <td>
         <select v-model="selectedRole" class="form-control">
             <option v-for="role in roles" :key="role.ID" :value="role.ID">
@@ -13,7 +13,7 @@
         </select>
     </td>
 
-    <!-- supplier -->
+    <!-- Input supplier -->
     <td>
         <select v-model="selectedSupplier" class="form-control">
             <option v-for="supplier in suppliers" :key="supplier.ID" :value="supplier.ID">
@@ -32,12 +32,12 @@
         {{ user.isInDatabase }}
     </td>
     
-    <!-- Save / Update -->
+    <!-- Update user -->
     <td>
         <button @click="updateUser(user.id)" class="btn btn-primary text-dark bg-white">Save</button>
     </td>
     
-    <!-- Delete -->
+    <!-- Delete user -->
     <td>
         <button @click="deleteUser(user.id)" class="btn btn-primary text-dark bg-white">Delete</button>
     </td>
@@ -76,22 +76,23 @@
                 required: true
             }
         },
+        setup(props) {
+            // Set a default for the selectedRole and selectedSupplier value in return data
+            const user = toRef(props, 'user');
+            defaultRole = user.value.roleID;
+            defaultSupplier = user.value.supplierID;
+        },
         data() {
             return {
                 selectedRole: defaultRole,
                 selectedSupplier: defaultSupplier
             }
-        },
-        setup(props) {
-            const user = toRef(props, 'user');
-            
-            defaultRole = user.value.roleID;
-            defaultSupplier = user.value.supplierID;
         }
     };
 </script>
 
 <style scoped>
+    /* Different table style, only in this file */
     td {
         background-color: rgb(248, 249, 250);
         vertical-align: middle;

@@ -3,10 +3,12 @@ import { store } from './store';
 const msal = require('@azure/msal-browser');
 const axios = require('axios');
 
+// Retieve sensitive values
 const env = require('./../environment');
 
 export const b2cScopes = env.b2cScopes;
 
+// Setup policy information
 export const b2cPolicies = {
   names: {
     signUpSignIn: env.name_signUpSignIn,
@@ -23,6 +25,7 @@ export const b2cPolicies = {
   authorityDomain: env.authorityDomain
 };
 
+// Setup msal information
 const msalConfig = {
   auth: {
     clientId: env.clientId, // This is the ONLY mandatory field; everything else is optional.
@@ -66,7 +69,7 @@ export function initializeMsal() {
 
   // Configure msal
   store.msalInstance.initialize().then(() => {
-
+    // Refresh the page after login
     store.msalInstance.addEventCallback((message) => {
       if (message.eventType === msal.EventType.LOGIN_SUCCESS) {
         location.reload();
@@ -149,7 +152,7 @@ export function clearCredentials() {
 }
 
 // Acquire access token
-export async function getTokenPopup() {
+export async function getTokenRedirect() {
   const request = {
     account: (store.msalInstance).getAccountByHomeId(store.accountId),
     scopes: b2cScopes
@@ -160,10 +163,10 @@ export async function getTokenPopup() {
     store.authenticated.value = true;
     store.accessToken = response.accessToken;
 
-  // Otherwise, acquire token with popup
+  // Otherwise, acquire token with redirect
   }).catch(async (error) => {
     if (error instanceof msal.InteractionRequiredAuthError) {
-      return await (store.msalInstance).acquireTokenPopup(request).then((response) => {
+      return await (store.msalInstance).acquireTokenRedirect(request).then((response) => {
         store.authenticated.value = true;
         store.accessToken = response.accessToken;
         setCredentials(response.accessToken);

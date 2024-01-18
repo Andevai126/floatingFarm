@@ -1,5 +1,8 @@
 <template>
+    <!-- User is not authenticated -->
     <button v-if="!authenticated" v-on:click="signIn" class="ff-button">Sign in</button>
+    
+    <!-- User is authenticated -->
     <div v-if="authenticated" class="text-center">
         {{ username }} ({{ roleTitle }})
         &nbsp;

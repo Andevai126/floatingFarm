@@ -1,8 +1,8 @@
 <template>
-    <!-- add mix -->
+    <!-- Add mix -->
     <AddMixContainer />
   
-    <!-- stock -->
+    <!-- Stock -->
     <StockContainer :canEdit="true"/>
 </template>
   

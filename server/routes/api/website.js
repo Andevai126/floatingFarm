@@ -21,6 +21,7 @@ function query(query, values, callback) {
 // Helper function to safely verify the role of the user
 function validRole(b2cObjectID, allowedRoles) {
     return new Promise((resolve, reject) => {
+        // Check if given value is ok
         const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
         const idOk = regex.test(b2cObjectID);
         if (!idOk) {
@@ -43,7 +44,7 @@ function validRole(b2cObjectID, allowedRoles) {
     });
 }
 
-// Get the role of a user, if the user does not exist, create it
+// Get the role of a user, if the user does not exist, create a new user with the guest role
 router.get('/getRole', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         query(
@@ -75,7 +76,6 @@ router.get('/getRole', passport.authenticate('oauth-bearer', { session: false })
                 } else {
                   res.status(401).send()
                 }
-                // res.status(500).send();
             }
         });
     }
@@ -251,7 +251,7 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
                     }).toString()
                 );
 
-                // Delete user in Azure
+                // Delete user in B2C Database
                 await axios.delete(
                     `https://graph.microsoft.com/v1.0/users/${req.body.id}`,
                     { headers: { 'Authorization': `Bearer ${response.data.access_token}`} }
@@ -259,7 +259,7 @@ router.post('/deleteUser', passport.authenticate('oauth-bearer', { session: fals
                     console.log("User deletion failed, user was probably already deleted (Azure)");
                 });
 
-                // Delete user in database
+                // Delete user in MySQL Database
                 query(
                     `DELETE FROM users WHERE users.b2cObjectID = ?;`,
                     [req.body.id],
@@ -372,7 +372,7 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                                 }
                             });
 
-                            // If present, add registered products to database
+                            // If present, save registered products
                             if (registeredProducts.length != 0) {
                                 for (var i = 0; i < registeredProducts.length/3-1; i++) {
                                     registeredProductsQuery += '(?, ?, ?), ';
@@ -388,7 +388,7 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                                 );
                             }
 
-                            // If present, add unregistered products to database
+                            // If present, save unregistered products
                             if (unregisteredProducts.length != 0) {
                                 for (var i = 0; i < unregisteredProducts.length/3-1; i++) {
                                     unregisteredProductsQuery += '(?, ?, ?), ';
@@ -403,12 +403,6 @@ router.post('/addMix', passport.authenticate('oauth-bearer', { session: false })
                                     }
                                 );
                             }
-                            
-                            // console.log(mixID);
-                            // console.log(registeredProductsQuery);
-                            // console.log(registeredProducts);
-                            // console.log(unregisteredProductsQuery);
-                            // console.log(unregisteredProducts);
                             res.status(200).send();
                         } else {
                             res.status(500).send();
@@ -457,10 +451,10 @@ function addContribution(supplierId, currentDateTime, dateTime, isDelivery, note
                 var products = [];
                 var productsQuery = "INSERT INTO productsincontribution (contributionID, productID, containerID, unregisteredProductName, quantity, unregisteredContainerName) VALUES ";
 
-                // Ignore empty, duplicate or weightless ones
+                // Ignore empty, duplicate or weightless products
                 productsInContribution.forEach((product) => {
                     if (!(product.id === null && product.name === '') && !productsFound.includes(product.id) && !productsFound.includes(product.name) && product.kilos != 0) {
-                        // If the id is present, don't save the name
+                        // If the id is present, don't keep the name
                         const productName = (product.id === null) ? product.name : null;
                         const containerName = (product.containerId === null) ? product.containerName : null;
                         // Add to products that will be send with query
@@ -475,7 +469,7 @@ function addContribution(supplierId, currentDateTime, dateTime, isDelivery, note
                     }
                 });
 
-                // If present, add products to database
+                // If present, save products
                 if (products.length != 0) {
                     // Add as many slots as there are records to be added
                     for (var i = 0; i < products.length/6-1; i++) {
@@ -483,7 +477,7 @@ function addContribution(supplierId, currentDateTime, dateTime, isDelivery, note
                     }
                     productsQuery += '(?, ?, ?, ?, ?, ?);';
 
-                    // Send productsInContribution to database
+                    // Save productsInContribution
                     query(
                         productsQuery,
                         products,
@@ -493,13 +487,6 @@ function addContribution(supplierId, currentDateTime, dateTime, isDelivery, note
                         }
                     );
                 }
-                
-                // console.log(mixID);
-                // console.log(registeredProductsQuery);
-                // console.log(registeredProducts);
-                // console.log(unregisteredProductsQuery);
-                // console.log(unregisteredProducts);
-                
             } else {
                 res.status(500).send();
             }
@@ -556,29 +543,32 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
                 if (notesEmpty) {
                     req.body.notes = null;
                 }
-
+                // Retrieve current date and time
                 const newDate = new Date();
                 const currentDate = newDate.toISOString().slice(0, 10);
                 const currentTime = newDate.toTimeString().slice(0, 5);
                 const currentDateTime = currentDate + " " + currentTime;
 
+                // User has supplier role
                 if (roleId === 3) {
+                    // Retrieve supplier id
                     query(
                         `SELECT users.supplierID FROM users WHERE users.b2cObjectID = ?`,
                         [req.authInfo['oid']],
                         ((results, fields) => {
-                            if (results) { // this is prob not a good check, put try/catch around all query()'s?
+                            if (results) {
                                 const supplierId = results[0].supplierID;
                                 
-                                // Add a contribution
+                                // Add a contribution with retrieved supplier id
                                 addContribution(supplierId, currentDateTime, req.body.dateTime, req.body.isDelivery, req.body.notes, req.body.productsInContribution, res);
                             } else {
                                 res.status(500).send();
                             }
                         })
                     );
+                // User has driver role
                 } else {
-                    // Add a contribution
+                    // Add a contribution with given supplier id
                     addContribution(req.body.supplierId, currentDateTime, req.body.dateTime, req.body.isDelivery, req.body.notes, req.body.productsInContribution, res);
                 }
             }
@@ -665,11 +655,8 @@ router.post('/updateStock', passport.authenticate('oauth-bearer', { session: fal
                 // Finalisation
                 const finalQuery = firstPartQuery + secondPartQuery + ');';
                 const values = [...rows, ...ids];
-
-                // console.log(finalQuery);
-                // console.log(values);
                 
-                // Update stock
+                // Save stock
                 query(
                     finalQuery,
                     values,
