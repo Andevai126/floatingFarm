@@ -11,8 +11,10 @@
     "@azure/msal-browser": "^3.3.0",
     "axios": "^1.5.0",
     "bootstrap": "^5.3.2",
+    "chart.js": "^4.4.1",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vue-chartjs": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.20",

@@ -581,8 +581,8 @@ router.post('/addContribution', passport.authenticate('oauth-bearer', { session:
 // Get products currently present on quay
 router.get('/getStock', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
-        // Check for Admin or Supplier or Farmer role
-        validRole(req.authInfo['oid'], [2, 3, 5]).then(() => {
+        // Check for Admin or Supplier or Farmer or Presenter role
+        validRole(req.authInfo['oid'], [2, 3, 5, 6]).then(() => {
             query(
                 `SELECT products.ID, products.name, products.kilosInStock FROM products;`,
                 [],
