@@ -673,4 +673,119 @@ router.post('/updateStock', passport.authenticate('oauth-bearer', { session: fal
     }
 );
 
+// Get contributions, created in the last two weeks
+router.get('/getContributions', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin role
+        validRole(req.authInfo['oid'], [2]).then(() => {
+            query(
+                `SELECT pic.contributionID, s.name AS supplierName, c.dateTime, c.dateTimeOfTransport, p.name AS productName, pic.quantity, cs.name AS containerName, c.supplierNotes
+                FROM productsincontribution AS pic
+                LEFT JOIN contributions AS c ON pic.contributionID = c.ID
+                LEFT JOIN suppliers AS s ON c.supplierID = s.ID
+                LEFT JOIN products AS p ON pic.productID = p.ID
+                LEFT JOIN containers AS cs ON pic.containerID = cs.ID;`,
+                [],
+                (results, fields) => {
+                    if (results){
+                        const condensedData = results.reduce((acc, current) => {
+                            const existingContribution = acc.find(item => item.contributionID === current.contributionID);
+                        
+                            if (existingContribution) {
+                                // ContributionID already exists, update the existing mix            
+                                existingContribution.products.push({
+                                    productName: current.productName,
+                                    quantity: current.quantity,
+                                    containerName: current.containerName
+                                });
+                            } else {
+                                // ContributionID doesn't exist, create a new mix
+                                acc.push({
+                                    contributionID: current.contributionID,
+                                    supplierName: current.supplierName,
+                                    dateTime: current.dateTime,
+                                    dateTimeOfTransport: current.dateTimeOfTransport,
+                                    products: [
+                                        {
+                                            productName: current.productName,
+                                            quantity: current.quantity,
+                                            containerName: current.containerName
+                                        }
+                                    ],
+                                    supplierNotes: current.supplierNotes
+                                });
+                            }
+                            return acc;
+                        }, []);
+                        res.status(200).send(condensedData);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
+// Get Mixes, created in the last two weeks
+router.get('/getMixes', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Admin role
+        validRole(req.authInfo['oid'], [2]).then(() => {
+            // Retrieve date and time two weeks back
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+            // Get dateTime format
+            const oldDateTime = twoWeeksAgo.toISOString().slice(0, 10) + " " + twoWeeksAgo.toTimeString().slice(0, 5);
+            console.log("the date two weeks ago was: ", oldDateTime);
+
+            query(`
+                SELECT pim.mixID, m.dateTime, p.name AS productName, pim.kilos, m.notes
+                FROM productsinmix AS pim
+                LEFT JOIN mixes AS m ON pim.mixID = m.ID
+                LEFT JOIN products AS p ON pim.productID = p.ID
+                WHERE m.dateTime >= ?;`,
+                [oldDateTime],
+                (results, fields) => {
+                    if (results) {
+                        const condensedData = results.reduce((acc, current) => {
+                            const existingMix = acc.find(item => item.mixID === current.mixID);
+                        
+                            if (existingMix) {
+                                // MixID already exists, update the existing mix
+                                existingMix.products.push({
+                                    productName: current.productName,
+                                    kilos: current.kilos
+                                });
+                            } else {
+                                // MixID doesn't exist, create a new mix
+                                acc.push({
+                                    mixID: current.mixID,
+                                    dateTime: current.dateTime,
+                                    products: [
+                                        {
+                                            productName: current.productName,
+                                            kilos: current.kilos
+                                        }
+                                    ],
+                                    notes: current.notes
+                                });
+                            }
+                            return acc;
+                        }, []);
+                        res.status(200).send(condensedData);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
+
 module.exports = router;

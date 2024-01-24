@@ -37,7 +37,7 @@
     var listOfSuppliers = ref([]);
 
     export default {
-        name: 'AdminCard',
+        name: 'UsersContainer',
         components: {
             UserInformation,
         },

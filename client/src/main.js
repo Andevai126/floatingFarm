@@ -2,10 +2,10 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { initializeMsal } from './msalConfig';
 
-// Get Bootstrap
+// Get Bootstrap classes
 import 'bootstrap/dist/css/bootstrap.css';
-// Popper does not work anyway?
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// Get Bootstrap js for collapse in overviews
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const app = createApp(App);
 app.mount('#app');

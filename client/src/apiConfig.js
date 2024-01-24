@@ -274,3 +274,41 @@ export function updateStock(stockProducts) {
     });
   });
 }
+
+// Retrieve contributions
+export function getContributions() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi(env.apiBase + "/api/website/getContributions", store.accessToken).then((contributions) => {
+      resolve(contributions);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenRedirect();
+      simpleGetApi(env.apiBase + "/api/website/getContributions", store.accessToken).then((contributions) => {
+        resolve(contributions);
+      }).catch((error) => {
+        console.error("Failed to get contributions: ", error);
+        reject();
+      });
+    });
+  });
+}
+
+// Retrieve mixes
+export function getMixes() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi(env.apiBase + "/api/website/getMixes", store.accessToken).then((mixes) => {
+      resolve(mixes);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenRedirect();
+      simpleGetApi(env.apiBase + "/api/website/getMixes", store.accessToken).then((mixes) => {
+        resolve(mixes);
+      }).catch((error) => {
+        console.error("Failed to get mixes: ", error);
+        reject();
+      });
+    });
+  });
+}
