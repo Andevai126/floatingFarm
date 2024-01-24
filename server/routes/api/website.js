@@ -678,14 +678,20 @@ router.get('/getContributions', passport.authenticate('oauth-bearer', { session:
     (req, res) => {
         // Check for Admin role
         validRole(req.authInfo['oid'], [2]).then(() => {
+            // Retrieve date and time two weeks back
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+            const oldDateTime = twoWeeksAgo.toISOString().slice(0, 10) + " " + twoWeeksAgo.toTimeString().slice(0, 5);
+
             query(
                 `SELECT pic.contributionID, s.name AS supplierName, c.dateTime, c.dateTimeOfTransport, p.name AS productName, pic.quantity, cs.name AS containerName, c.supplierNotes
                 FROM productsincontribution AS pic
                 LEFT JOIN contributions AS c ON pic.contributionID = c.ID
                 LEFT JOIN suppliers AS s ON c.supplierID = s.ID
                 LEFT JOIN products AS p ON pic.productID = p.ID
-                LEFT JOIN containers AS cs ON pic.containerID = cs.ID;`,
-                [],
+                LEFT JOIN containers AS cs ON pic.containerID = cs.ID
+                WHERE c.dateTime >= ?;`,
+                [oldDateTime],
                 (results, fields) => {
                     if (results){
                         const condensedData = results.reduce((acc, current) => {
@@ -737,10 +743,7 @@ router.get('/getMixes', passport.authenticate('oauth-bearer', { session: false }
             // Retrieve date and time two weeks back
             const twoWeeksAgo = new Date();
             twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-
-            // Get dateTime format
             const oldDateTime = twoWeeksAgo.toISOString().slice(0, 10) + " " + twoWeeksAgo.toTimeString().slice(0, 5);
-            console.log("the date two weeks ago was: ", oldDateTime);
 
             query(`
                 SELECT pim.mixID, m.dateTime, p.name AS productName, pim.kilos, m.notes

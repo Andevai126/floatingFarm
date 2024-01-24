@@ -1,7 +1,7 @@
 <template>
     <div class="container rounded border bg-light shadow p-3">
 
-        <h4>Last Mixes</h4>
+        <h4>Mixes of last two weeks</h4>
         <hr>
 
         <div class="accordion" id="accordionM">
@@ -13,7 +13,7 @@
                     </button>
                 </h2>
 
-                <div :id="'collapseM' + index" class="accordion-collapse collapse" :class="{ 'show': index === 0 }" :aria-labelledby="'headingM' + index" data-bs-parent="#accordionM">
+                <div :id="'collapseM' + index" class="accordion-collapse collapse" :aria-labelledby="'headingM' + index" data-bs-parent="#accordionM"> <!-- :class="{ 'show': index === 0 }" -->
                     <div class="accordion-body">
                         <strong>Notes: </strong> {{ item.notes }}
                         <!-- Loop through products -->

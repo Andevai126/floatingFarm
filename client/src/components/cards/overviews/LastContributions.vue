@@ -1,7 +1,7 @@
 <template>
     <div class="container rounded border bg-light shadow p-3">
 
-        <h4>Last Contributions</h4>
+        <h4>Contributions of last two weeks</h4>
         <hr>
 
         <div class="accordion" id="accordionC">
@@ -13,7 +13,7 @@
                     </button>
                 </h2>
 
-                <div :id="'collapseC' + index" class="accordion-collapse collapse" :class="{ 'show': index === 0 }" :aria-labelledby="'headingC' + index" data-bs-parent="#accordionC">
+                <div :id="'collapseC' + index" class="accordion-collapse collapse" :aria-labelledby="'headingC' + index" data-bs-parent="#accordionC"> <!-- :class="{ 'show': index === 0 }" -->
                     <div class="accordion-body">
                         <strong>DateTime of Transport: </strong> {{ new Date(item.dateTimeOfTransport).toLocaleString() }}<br>
                         <strong>Supplier Notes: </strong> {{ item.supplierNotes }}
