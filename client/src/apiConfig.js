@@ -312,3 +312,22 @@ export function getMixes() {
     });
   });
 }
+
+// Retrieve nutrients of mixes
+export function getNutrientsOfMixes() {
+  return new Promise((resolve, reject) => {
+    // Try with stored access token
+    simpleGetApi(env.apiBase + "/api/website/getNutrientsOfMixes", store.accessToken).then((nutrientsOfMixes) => {
+      resolve(nutrientsOfMixes);
+    // Try with acquired access token
+    }).catch(async () => {
+      await getTokenRedirect();
+      simpleGetApi(env.apiBase + "/api/website/getNutrientsOfMixes", store.accessToken).then((nutrientsOfMixes) => {
+        resolve(nutrientsOfMixes);
+      }).catch((error) => {
+        console.error("Failed to get nutrients of mixes: ", error);
+        reject();
+      });
+    });
+  });
+}

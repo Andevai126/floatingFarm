@@ -735,7 +735,7 @@ router.get('/getContributions', passport.authenticate('oauth-bearer', { session:
     }
 );
 
-// Get Mixes, created in the last two weeks
+// Get mixes, created in the last two weeks
 router.get('/getMixes', passport.authenticate('oauth-bearer', { session: false }),
     (req, res) => {
         // Check for Admin role
@@ -791,4 +791,33 @@ router.get('/getMixes', passport.authenticate('oauth-bearer', { session: false }
     }
 );
 
+// Get all mixes, but only the nutrients
+router.get('/getNutrientsOfMixes', passport.authenticate('oauth-bearer', { session: false }),
+    (req, res) => {
+        // Check for Presenter role
+        validRole(req.authInfo['oid'], [6]).then(() => {
+            query(`
+                SELECT
+                    pim.mixID,
+                    m.dateTime,
+                    SUM(pim.kilos*(p.dsPerKilo/1000)*p.vemPerKilo)/33 AS vemTotal,
+                    SUM(pim.kilos*(p.dsPerKilo/1000)*p.dvePerKilo)/33 AS dveTotal
+                FROM productsinmix AS pim
+                LEFT JOIN mixes AS m ON pim.mixID = m.ID
+                LEFT JOIN products AS p ON pim.productID = p.ID
+                GROUP BY pim.mixID;`,
+                [],
+                (results, fields) => {
+                    if (results) {
+                        res.status(200).send(results);
+                    } else{
+                        res.status(500).send();
+                    }
+                }
+            );
+        }).catch(() => {
+            res.status(401).send();
+        });
+    }
+);
 module.exports = router;
