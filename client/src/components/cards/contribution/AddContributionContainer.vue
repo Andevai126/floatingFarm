@@ -41,20 +41,20 @@
 		</div>
 
 		<!-- IsDelivery -->
-		<div class="container mb-3">
+		<!-- <div class="container mb-3">
 			<div class="form-check form-switch">
 				<input class="form-check-input" type="checkbox" role="switch" v-model="isDelivery">
 				This contribution will be {{ isDelivery ? 'delivered.' : 'collected by Floating Farm.' }}
 			</div>
-		</div>
+		</div> -->
 
 		<!-- Isdelivery -->
-		<div class="container mb-3">
+		<!-- <div class="container mb-3">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" v-model="isDelivery">
 				Check this box if this contribution will be delivered.
 			</div>
-		</div>
+		</div> -->
 
 		<!-- Choose supplier -->
 		<div v-if="canInputSupplier">
